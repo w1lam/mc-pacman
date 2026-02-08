@@ -1,0 +1,549 @@
+{
+  "name": "Freaky Franklin SERVERSIDE",
+  "id": "freaky-frankling-serverside",
+  "listVersion": "0.1.5",
+  "mcVersion": "1.21.10",
+  "loader": "fabric",
+  "env": "Server",
+  "description": "Server Side version of Freaky Franklin",
+  "pkgType": "modpack",
+  "listSource": "",
+  "hash": "",
+  "entries": [
+    {
+      "ID": "resourceful-config",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "some-more-blocks",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "enderscape",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "underground-worlds",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "better-archeology",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "waystones",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "rustic-deligth",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "xaeros-minimap",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-roofs",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "spawn-animations-compats",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "attributefix",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "packet-fixer",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "debugify",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "chunky",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "spark",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "servercore",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "appleskin",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "xaeros-world-map",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "ping-wheel",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "inventory-management",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "jade",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "pick-up-notifier",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "emotecraft",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fallingtree",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "veinminer-enchantment",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "veinminer",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cut-through",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "rechiseled",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "diagonal-fences",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "diagonal-walls",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "diagonal-windows",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "enchanted-vertical-slabs",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-bridges",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-doors",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-fences-and-walls",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-lights-and-lamps",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-stairs",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-trapdoors",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "macaws-windows",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "stoneworks",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "beautify-refabricated",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "elytra-trims",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "travelersbackpack",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "immersive-ores",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "attributes",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "skills",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "default-skill-trees",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "do-a-barrel-roll",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "hardcore-revival",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "true-ending",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "toms-storage",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "nether-chested",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "storage-delight",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "crate-delight",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "farmers-delight-refabricated",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "more-delight",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "transmog",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "magnum-torch",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "trading-post",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "animal_feeding_trough",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "silk",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "melody",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fabric-api",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cloth-config",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "lithostitched",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fabric-language-kotlin",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "creativecore",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "collective",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "mru",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "yacl",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "balm",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cicada",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "player-animation-library",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "library-ferret",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "puzzles-lib",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "forge-config-api-port",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "architectury-api",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "glitchcore",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "konkrete",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cardinal-components-api",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "moogs-structure-lib",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fzzy-config",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "malilib",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "prickle",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "supermartijn642s-core-lib",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "supermartijn642s-config-lib",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "lithium",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "ferrite-core",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "c2me-fabric",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "scalablelux",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "krypton",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "clumps",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "distanthorizons",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "terralith",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "dungeons-and-taverns",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "better-village",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "mes-moogs-end-structures",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "incendium",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "serene-seasons",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "weaponmaster",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "spawn-animations",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "subtle-effects",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "easy-anvils",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "easy-magic",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "visual-workbench",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "villager-names-serilum",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "sound-physics-remastered",
+      "pinnedVer": "",
+      "type": "mod"
+    }
+  ]
+}

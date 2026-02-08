@@ -1,0 +1,404 @@
+{
+  "name": "Cool Visuals",
+  "id": "cool-visuals",
+  "listVersion": "0.0.4",
+  "mcVersion": "1.21.11",
+  "loader": "fabric",
+  "env": "client",
+  "description": "Client Side only modpack with cool visual and performance mods.",
+  "pkgType": "modpack",
+  "listSource": "",
+  "hash": "",
+  "entries": [
+    {
+      "ID": "particle-core",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "gputape",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "rsls",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "debugify",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "packet-fixer",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "no-resource-pack-warnings",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "yeetus-experimentus",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "current-game-music-track",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "minecraft-cursor",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cubes-without-borders",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "zoomify",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "invmove",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "resourcify",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "modmenu",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "jade",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "reeses-sodium-options",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "smooth-gui",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "dynamiccrosshair",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "dynamiccrosshaircompat",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "immersive-hotbar",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "pick-up-notifier",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "better-advancements",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "silk",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fabric-api",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cloth-config",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fabric-language-kotlin",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "creativecore",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "collective",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "mru",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "yacl",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "balm",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "player-animation-library",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "puzzles-lib",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "forge-config-api-port",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "architectury-api",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "glitchcore",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fzzy-config",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "sodium-extra",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "sodium",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "sodium-shadowy-path-blocks",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "entityculling",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "lithium",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "immediatelyfast",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "badoptimizations",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "ferrite-core",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "c2me-fabric",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "moreculling",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cull-leaves",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "scalablelux",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "krypton",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "dynamic-fps",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "better-block-entities",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "distanthorizons",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "lambdynamiclights",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "iris",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "visuality",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "particular-reforged",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "fallingleaves",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "bettergrassify",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "ambient-environment",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "physicsmod",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "not-enough-animations",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "skyboxify",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "entity-model-features",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "entitytexturefeatures",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "optigui",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "continuity",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "3dskinlayers",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "weaponmaster",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "cameraoverhaul",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "subtle-effects",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "armor-3d",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "explosive-enhancement",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "hold-my-items",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "sound-physics-remastered",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "sound",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "ambientsounds",
+      "pinnedVer": "",
+      "type": "mod"
+    },
+    {
+      "ID": "presence-footsteps",
+      "pinnedVer": "",
+      "type": "mod"
+    }
+  ]
+}

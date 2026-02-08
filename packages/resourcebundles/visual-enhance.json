@@ -1,0 +1,114 @@
+{
+  "name": "Visual Enhancements Bundle",
+  "id": "visual-enhancements",
+  "listVersion": "0.0.1",
+  "mcVersion": "1.21.11",
+  "loader": "",
+  "env": "Client",
+  "description": "Cool lil resourcepacks that spice up minecraft visuals",
+  "pkgType": "resourcebundle",
+  "listSource": "",
+  "hash": "",
+  "entries": [
+    {
+      "ID": "connected-rocks",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "connected-bricks",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "connected-paths",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "glowing-glints",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "animated-items",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "fresh-food",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "tools-and-utils",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "recolorful-containers-gui",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "eclectic-trove-legendary-tooltips",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "fancy-crops",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "simple-grass-flowers",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "os-colorful-grasses",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "better-sugar-cane",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "fresh-flower-pots",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "better-busy-leaves",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "better-foliage",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "fresh-animations",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "fresh-animations-extensions",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "fire-rekindled",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    },
+    {
+      "ID": "vvi",
+      "pinnedVer": "",
+      "type": "resourcepack"
+    }
+  ]
+}

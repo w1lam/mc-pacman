@@ -2,5 +2,5 @@
 package netcfg
 
 const (
-	GithubRepo = "https://api.github.com/repos/w1lam/mcpacman/"
+	GithubRepo = "https://api.github.com/repos/w1lam/mc-pacman/"
 )

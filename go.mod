@@ -1,10 +1,19 @@
 module github.com/w1lam/mc-pacman
 
-go 1.25.6
-
-require github.com/spf13/cobra v1.10.2
+go 1.25.3
 
 require (
-	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/spf13/pflag v1.0.9 // indirect
+	github.com/spf13/cobra v1.10.2
+	github.com/w1lam/Packages v0.0.0
+	github.com/w1lam/Raw-Mod-Installer v0.0.0-20260207191818-cd4b816085f6
 )
+
+require (
+	github.com/eiannone/keyboard v0.0.0-20220611211555-0d226195f203 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
+	github.com/olekukonko/ts v0.0.0-20171002115256-78ecb04241c0 // indirect
+	github.com/spf13/pflag v1.0.9 // indirect
+	golang.org/x/sys v0.37.0 // indirect
+)
+
+replace github.com/w1lam/Packages v0.0.0 => C:/Users/william/PROG-GO/PACKAGES/
