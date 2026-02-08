@@ -1,4 +1,4 @@
-package core
+package paths
 
 import (
 	"fmt"
@@ -13,10 +13,11 @@ type Paths struct {
 	ResourcePacksDir string
 	ShaderPacksDir   string
 
-	ProgramFilesDir string
-	DataDir         string
-	ManifestPath    string
-	MetaDataPath    string
+	RootDir string
+
+	DataDir      string
+	ManifestPath string
+	MetaDataPath string
 
 	PackagesDir string
 	BackupsDir  string
@@ -47,8 +48,8 @@ func Resolve() (*Paths, error) {
 		return nil, err
 	}
 
-	installerDir := filepath.Join(mcDir, ".mc-pacman")
-	dataDir := filepath.Join(installerDir, "data")
+	rootDir := filepath.Join(mcDir, ".mc-pacman")
+	dataDir := filepath.Join(rootDir, "data")
 
 	return &Paths{
 		MinecraftDir:     mcDir,
@@ -56,13 +57,14 @@ func Resolve() (*Paths, error) {
 		ResourcePacksDir: filepath.Join(mcDir, "resourcepacks"),
 		ShaderPacksDir:   filepath.Join(mcDir, "shaderpacks"),
 
-		ProgramFilesDir: installerDir,
-		DataDir:         dataDir,
-		ManifestPath:    filepath.Join(dataDir, "manifest.json"),
-		MetaDataPath:    filepath.Join(dataDir, "meta.json"),
+		RootDir: rootDir,
 
-		PackagesDir: filepath.Join(installerDir, "packages"),
-		BackupsDir:  filepath.Join(installerDir, "backups"),
-		LogPath:     filepath.Join(installerDir, "logs.log"),
+		DataDir:      dataDir,
+		ManifestPath: filepath.Join(dataDir, "manifest.json"),
+		MetaDataPath: filepath.Join(dataDir, "meta.json"),
+
+		PackagesDir: filepath.Join(rootDir, "packages"),
+		BackupsDir:  filepath.Join(rootDir, "backups"),
+		LogPath:     filepath.Join(rootDir, "logs.log"),
 	}, nil
 }

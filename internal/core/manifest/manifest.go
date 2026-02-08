@@ -3,31 +3,47 @@ package core
 import (
 	"time"
 
-	"github.com/w1lam/Packages/modrinth"
 	packages "github.com/w1lam/mc-pacman/internal/core/packages"
-	paths "github.com/w1lam/mc-pacman/internal/core/paths"
 )
 
 // Manifest is the manifest for all global information required by the program
 type Manifest struct {
-	SchemaVersion  int    `json:"schemaVersion"`
-	ProgramVersion string `json:"programVersion"`
+	SchemaVersion int `json:"schemaVersion"`
 
-	EnabledPackages map[packages.PackageType]string `json:"enabledPackages"`
+	EnabledPackages EnabledPackages `json:"enabledPackages"`
 
-	InstalledPackages map[packages.PackageType]map[string]InstalledPackage `json:"installedPackages"`
+	InstalledPackages InstalledPackages `json:"installedPackages"`
 
-	InstalledLoaders map[string]LoaderInfo `json:"installedLoader"`
-	Paths            *paths.Paths          `json:"-"`
-	Backups          []BackupEntry
-	Initialized      bool `json:"initialized"`
+	InstalledLoaders []LoaderInfo `json:"installedLoader"`
+
+	Backups     []BackupEntry `json:"backups"`
+	Initialized bool          `json:"initialized"`
+	Path        string        `json:"path"`
 }
 
+// EnabledPackages type
+type EnabledPackages struct {
+	Modpack        string `json:"modpack"`
+	ResourceBundle string `json:"resourcebundle"`
+	ShaderBundle   string `json:"shaderbundle"`
+	DatapackBundle string `json:"datapackbundle"` // not really used
+}
+
+// InstalledPackages type
+type InstalledPackages struct {
+	Modpacks        map[string]packages.InstalledPackage `json:"modpacks"`
+	ResourceBundles map[string]packages.InstalledPackage `json:"resourceBundles"`
+	ShaderBundles   map[string]packages.InstalledPackage `json:"shaderBundles"`
+	DatapackBundles map[string]packages.InstalledPackage `json:"datapackBundles"` // not really used
+}
+
+// BackupEntry
 type BackupEntry struct {
-	Time time.Time
-	Type packages.PackageType
-	Path string
-	ID   string
+	PkgID       packages.PkgID       `json:"pkgID"`
+	Time        time.Time            `json:"time"`
+	Type        packages.PackageType `json:"pkgType"`
+	Path        string               `json:"path"`
+	GeneratedID string               `json:"generatedID"`
 }
 
 // LoaderInfo is the information about a mod loader
@@ -35,10 +51,4 @@ type LoaderInfo struct {
 	Loader        string `json:"loader"`
 	McVersion     string `json:"mcVersion"`
 	LoaderVersion string `json:"version"`
-}
-
-// Updates is all info on available updates
-type Updates struct {
-	ModListUpdate map[string]bool                   `json:"-"`
-	ModUpdates    map[string][]modrinth.UpdateEntry `json:"-"`
 }

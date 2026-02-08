@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/w1lam/Raw-Mod-Installer/internal/paths"
+	"github.com/w1lam/Packages/utils"
 )
 
 // Load loads the manifest
-func Load(path *paths.Paths) (*Manifest, error) {
-	data, err := os.ReadFile(path.ManifestPath)
+func Load(path string) (*Manifest, error) {
+	if !utils.CheckFileExists(path) {
+		return nil, fmt.Errorf("path does not exist: %s", path)
+	}
+
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -20,16 +24,16 @@ func Load(path *paths.Paths) (*Manifest, error) {
 		return nil, err
 	}
 
-	m.Paths = path
+	if m.Path == "" {
+		m.Path = path
+	}
 
-	m.Normalize()
 	return &m, nil
 }
 
 // Save saves the manifest to the specified path atomically.
 func (m *Manifest) Save() error {
-	m.Normalize()
-	tmp := m.Paths.ManifestPath + ".tmp"
+	tmp := m.Path + ".tmp"
 
 	data, err := json.MarshalIndent(m, "", "  ")
 	if err != nil {
@@ -40,5 +44,5 @@ func (m *Manifest) Save() error {
 		return fmt.Errorf("failed to write manifest temp file: %s", err)
 	}
 
-	return os.Rename(tmp, m.Paths.ManifestPath)
+	return os.Rename(tmp, m.Path)
 }

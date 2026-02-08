@@ -3,21 +3,19 @@ package main
 import (
 	"log"
 	"os"
+
+	"github.com/w1lam/mc-pacman/internal/app"
+	"github.com/w1lam/mc-pacman/internal/app/cli"
+	"github.com/w1lam/mc-pacman/internal/app/init"
 )
 
 // NOTES:
 // Add independent mod update checking and updating and only update mods that have new versions
 // Add version checking for program updates
 
-// initiation
-func init() {}
-
 func main() {
-	// packages.CompareLists("C:\\Users\\William\\PROG-GO\\RAWMODINSTALLER\\client_list.txt", "C:\\Users\\William\\PROG-GO\\RAWMODINSTALLER\\server_list.txt")
-	// time.Sleep(time.Hour * 1)
-
 	if len(os.Args) > 1 {
-		err := app.InitCore()
+		err := init.InitCore()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -26,7 +24,7 @@ func main() {
 		return
 	}
 
-	if err := app.InitCore(); err != nil {
+	if err := init.InitCore(); err != nil {
 		log.Fatal(err)
 	}
 

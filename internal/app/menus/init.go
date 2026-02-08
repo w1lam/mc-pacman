@@ -1,4 +1,4 @@
-package app
+package menus
 
 import (
 	"github.com/w1lam/Packages/menu"

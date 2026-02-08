@@ -1,8 +1,11 @@
-package app
+package tui
 
 import (
 	"fmt"
 	"log"
+
+	"github.com/w1lam/Packages/tui"
+	initial "github.com/w1lam/mc-pacman/internal/app/init"
 )
 
 // InitTUI initializes the tui
@@ -15,7 +18,7 @@ func InitTUI() {
 	m := state.Get().Manifest()
 
 	// Setting Program Exit Function
-	menu.SetProgramExitFunc(Exit)
+	menu.SetProgramExitFunc(initial.Exit)
 
 	// Start menu workers
 	menu.StartWorkers(4)

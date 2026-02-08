@@ -10,7 +10,7 @@ import (
 	packages "github.com/w1lam/mc-pacman/internal/core/packages"
 )
 
-type GithubContentResponse struct {
+type githubContentResponse struct {
 	Name   string `json:"name"`
 	Path   string `json:"path"`
 	Sha    string `json:"sha"`
@@ -49,7 +49,7 @@ func GetAllAvailablePackages() (packages.AvailablePackages, error) {
 }
 
 func getPackagesFromFolder(folder string) ([]packages.ResolvedPackage, error) {
-	var items []GithubContentResponse
+	var items []githubContentResponse
 
 	url := fmt.Sprintf("%scontents/packages/%s", netcfg.GithubRepo, folder)
 	if err := githubGetJSON(url, &items); err != nil {
@@ -103,7 +103,7 @@ func githubGetJSON(url string, out any) error {
 }
 
 func scanPackagesFolder() ([]string, error) {
-	var items []GithubContentResponse
+	var items []githubContentResponse
 
 	url := netcfg.GithubRepo + "contents/packages"
 	if err := githubGetJSON(url, &items); err != nil {
