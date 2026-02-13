@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/w1lam/Packages/menu"
 	"github.com/w1lam/Packages/tui"
-	initial "github.com/w1lam/mc-pacman/internal/app/init"
+	"github.com/w1lam/mc-pacman/internal/app"
+	"github.com/w1lam/mc-pacman/internal/core/manifest"
+	"github.com/w1lam/mc-pacman/internal/core/paths"
+	"github.com/w1lam/mc-pacman/internal/core/state"
 )
 
 // InitTUI initializes the tui
@@ -15,10 +19,15 @@ func InitTUI() {
 	tui.ClearScreenRaw()
 
 	fmt.Println("* Starting up...")
-	m := state.Get().Manifest()
+	var m *manifest.Manifest
+	var p *paths.Paths
+	state.Get().Read(func(s *state.State) {
+		m = s.Manifest()
+		p = s.Paths()
+	})
 
 	// Setting Program Exit Function
-	menu.SetProgramExitFunc(initial.Exit)
+	menu.SetProgramExitFunc(app.Exit)
 
 	// Start menu workers
 	menu.StartWorkers(4)
@@ -31,7 +40,7 @@ func InitTUI() {
 	// Backup if first run
 	if !m.Initialized {
 		go func() {
-			res, err := services.PerformInitialBackup(m.Paths)
+			res, err := services.PerformInitialBackup(p)
 			if err != nil {
 				errors.Report("startup.backup", err)
 				return

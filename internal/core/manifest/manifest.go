@@ -1,4 +1,5 @@
-package core
+// Package manifest contains manifest
+package manifest
 
 import (
 	"time"
@@ -8,36 +9,18 @@ import (
 
 // Manifest is the manifest for all global information required by the program
 type Manifest struct {
-	SchemaVersion int `json:"schemaVersion"`
-
-	EnabledPackages EnabledPackages `json:"enabledPackages"`
-
-	InstalledPackages InstalledPackages `json:"installedPackages"`
-
-	InstalledLoaders []LoaderInfo `json:"installedLoader"`
-
-	Backups     []BackupEntry `json:"backups"`
-	Initialized bool          `json:"initialized"`
-	Path        string        `json:"path"`
+	SchemaVersion     int                            `json:"schemaVersion"`
+	EnabledPackages   EnabledPackages                `json:"enabledPackages"`
+	InstalledPackages packages.InstalledPackageIndex `json:"installedPackages"`
+	InstalledLoaders  []LoaderInfo                   `json:"installedLoader"`
+	Backups           []BackupEntry                  `json:"backups"`
+	Initialized       bool                           `json:"initialized"`
 }
 
-// EnabledPackages type
-type EnabledPackages struct {
-	Modpack        string `json:"modpack"`
-	ResourceBundle string `json:"resourcebundle"`
-	ShaderBundle   string `json:"shaderbundle"`
-	DatapackBundle string `json:"datapackbundle"` // not really used
-}
+// EnabledPackages asda
+type EnabledPackages map[packages.PkgType]packages.PkgID
 
-// InstalledPackages type
-type InstalledPackages struct {
-	Modpacks        map[string]packages.InstalledPackage `json:"modpacks"`
-	ResourceBundles map[string]packages.InstalledPackage `json:"resourceBundles"`
-	ShaderBundles   map[string]packages.InstalledPackage `json:"shaderBundles"`
-	DatapackBundles map[string]packages.InstalledPackage `json:"datapackBundles"` // not really used
-}
-
-// BackupEntry
+// BackupEntry asda
 type BackupEntry struct {
 	PkgID       packages.PkgID       `json:"pkgID"`
 	Time        time.Time            `json:"time"`

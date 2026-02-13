@@ -6,7 +6,7 @@ import (
 
 	"github.com/w1lam/mc-pacman/internal/app"
 	"github.com/w1lam/mc-pacman/internal/app/cli"
-	"github.com/w1lam/mc-pacman/internal/app/init"
+	"github.com/w1lam/mc-pacman/internal/app/tui"
 )
 
 // NOTES:
@@ -14,21 +14,15 @@ import (
 // Add version checking for program updates
 
 func main() {
-	if len(os.Args) > 1 {
-		err := init.InitCore()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		cli.Execute()
-		return
-	}
-
-	if err := init.InitCore(); err != nil {
+	app, err := app.New()
+	if err != nil {
 		log.Fatal(err)
 	}
 
-	app.InitTUI()
+	if len(os.Args) > 1 {
+		cli.Execute(app)
+		return
+	}
 
-	app.Run()
+	tui.InitTUI()
 }

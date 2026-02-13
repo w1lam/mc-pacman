@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/w1lam/Packages/menu"
-	"github.com/w1lam/Raw-Mod-Installer/internal/actions"
-	"github.com/w1lam/Raw-Mod-Installer/internal/installer"
-	"github.com/w1lam/Raw-Mod-Installer/internal/manifest"
-	"github.com/w1lam/Raw-Mod-Installer/internal/packages"
-	"github.com/w1lam/Raw-Mod-Installer/internal/services"
-	"github.com/w1lam/Raw-Mod-Installer/internal/state"
-	"github.com/w1lam/Raw-Mod-Installer/internal/ui"
+	"github.com/w1lam/mc-pacman/internal/actions"
+	"github.com/w1lam/mc-pacman/internal/core/manifest"
+	"github.com/w1lam/mc-pacman/internal/core/packages"
+	"github.com/w1lam/mc-pacman/internal/core/state"
+	"github.com/w1lam/mc-pacman/internal/installer"
+	"github.com/w1lam/mc-pacman/internal/services"
+	"github.com/w1lam/mc-pacman/internal/ui"
 )
 
 type PackMenuItem struct {

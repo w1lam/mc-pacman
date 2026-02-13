@@ -1,41 +1,39 @@
+// Package state holds the state of app
 package state
 
 import (
+	"fmt"
 	"sync"
 
 	manifest "github.com/w1lam/mc-pacman/internal/core/manifest"
-	packages "github.com/w1lam/mc-pacman/internal/core/packages"
-	paths "github.com/w1lam/mc-pacman/internal/core/paths"
-)
-
-var ProgramVersion string = "0.1a"
-
-var (
-	globalState *State
-	once        sync.Once
 )
 
 // State is the global state struct
 type State struct {
-	ProgramVersion string
-	mu             sync.RWMutex
+	mu sync.RWMutex
 
-	paths    *paths.Paths
 	manifest *manifest.Manifest
-
-	availablePackages *packages.AvailablePackages
+	repo     manifest.Repository
 }
 
-// SetState sets the global state
-func SetState(s *State) {
-	once.Do(func() {
-		globalState = s
-	})
+// New initializes app state
+func New(m *manifest.Manifest, repo manifest.Repository) (*State, error) {
+	if m == nil || repo == nil {
+		return nil, fmt.Errorf("input data is nil")
+	}
+
+	return &State{
+		manifest: m,
+		repo:     repo,
+	}, nil
 }
 
-func SetAvailablePackages(pkgs *packages.AvailablePackages) {
-	globalState.mu.Lock()
-	defer globalState.mu.Unlock()
+// Manifest accessor
+func (s *State) Manifest() *manifest.Manifest {
+	return s.manifest
+}
 
-	globalState.availablePackages = pkgs
+// Repo manifest repo accessor
+func (s *State) Repo() manifest.Repository {
+	return s.repo
 }

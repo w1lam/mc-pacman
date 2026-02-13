@@ -16,4 +16,4 @@ require (
 	golang.org/x/sys v0.37.0 // indirect
 )
 
-replace github.com/w1lam/Packages v0.0.0 => C:/Users/william/PROG-GO/PACKAGES/
+replace github.com/w1lam/Packages v0.0.0 => C:/Users/william/dev/go/utils/packages/

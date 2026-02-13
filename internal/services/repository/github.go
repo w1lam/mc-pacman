@@ -1,4 +1,4 @@
-package services
+package repository
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	packages "github.com/w1lam/mc-pacman/internal/core/packages"
 )
 
-type githubContentResponse struct {
+type GithubContentResponse struct {
 	Name   string `json:"name"`
 	Path   string `json:"path"`
 	Sha    string `json:"sha"`
@@ -19,50 +19,21 @@ type githubContentResponse struct {
 	Type   string `json:"type"`
 }
 
-func GetAllAvailablePackages() (packages.AvailablePackages, error) {
-	folders, err := scanPackagesFolder()
-	if err != nil {
-		return packages.AvailablePackages{}, err
-	}
-
-	out := packages.AvailablePackages{
-		ModPacks:            make(map[string]packages.ResolvedPackage),
-		ResourcePackBundles: make(map[string]packages.ResolvedPackage),
-		ShaderPackBundles:   make(map[string]packages.ResolvedPackage),
-	}
-
-	for _, folder := range folders {
-		pkgs, err := getPackagesFromFolder(folder)
-		if err != nil {
-			return packages.AvailablePackages{}, err
-		}
-
-		for _, pkg := range pkgs {
-			if out[pkg.Type] == nil {
-				out[pkg.Type] = make(map[string]packages.ResolvedPackage)
-			}
-			out[pkg.Type][pkg.Name] = pkg
-		}
-	}
-
-	return out, nil
-}
-
-func getPackagesFromFolder(folder string) ([]packages.ResolvedPackage, error) {
-	var items []githubContentResponse
+func GetPackagesFromFolder(folder string) ([]packages.RemotePackage, error) {
+	var items []GithubContentResponse
 
 	url := fmt.Sprintf("%scontents/packages/%s", netcfg.GithubRepo, folder)
-	if err := githubGetJSON(url, &items); err != nil {
+	if err := GithubGetJSON(url, &items); err != nil {
 		return nil, err
 	}
 
-	var result []packages.ResolvedPackage
+	var result []packages.RemotePackage
 	for _, it := range items {
 		if it.Type != "file" {
 			continue
 		}
 
-		pkg, err := resolvePackageJSON(it.RawURL)
+		pkg, err := ResolvePackageJSON(it.RawURL)
 		if err != nil {
 			return nil, fmt.Errorf("folder %s: %w", folder, err)
 		}
@@ -76,7 +47,7 @@ var githubHTTPClient = &http.Client{
 	Timeout: 10 * time.Second,
 }
 
-func githubGetJSON(url string, out any) error {
+func GithubGetJSON(url string, out any) error {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err
@@ -102,11 +73,11 @@ func githubGetJSON(url string, out any) error {
 	return nil
 }
 
-func scanPackagesFolder() ([]string, error) {
-	var items []githubContentResponse
+func ScanPackagesFolder() ([]string, error) {
+	var items []GithubContentResponse
 
 	url := netcfg.GithubRepo + "contents/packages"
-	if err := githubGetJSON(url, &items); err != nil {
+	if err := GithubGetJSON(url, &items); err != nil {
 		return nil, err
 	}
 
@@ -124,10 +95,10 @@ func scanPackagesFolder() ([]string, error) {
 	return folders, nil
 }
 
-func resolvePackageJSON(url string) (packages.ResolvedPackage, error) {
-	var pkg packages.ResolvedPackage
+func ResolvePackageJSON(url string) (packages.RemotePackage, error) {
+	var pkg packages.RemotePackage
 
-	if err := githubGetJSON(url, &pkg); err != nil {
+	if err := GithubGetJSON(url, &pkg); err != nil {
 		return pkg, err
 	}
 

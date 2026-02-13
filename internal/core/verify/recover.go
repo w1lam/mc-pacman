@@ -12,6 +12,7 @@ import (
 	paths "github.com/w1lam/mc-pacman/internal/core/paths"
 )
 
+// ScanDirForPackageID scans a directory looking for a *PkgID*.id.json file
 func ScanDirForPackageID(dir string) (packages.InstalledPackage, error) {
 	entries, err := os.ReadDir(dir)
 	if err != nil {
@@ -31,7 +32,7 @@ func ScanDirForPackageID(dir string) (packages.InstalledPackage, error) {
 	return packages.InstalledPackage{}, fmt.Errorf("no id file found in: %s", dir)
 }
 
-// ScanActitvePackages scans for all active packages
+// ScanActitvePackages scans all active packages directories looking for a *PkgID*.id.json
 func ScanActitvePackages(path *paths.Paths) ([]packages.InstalledPackage, error) {
 	var found []packages.InstalledPackage
 

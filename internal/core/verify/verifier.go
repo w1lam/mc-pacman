@@ -4,103 +4,83 @@ import (
 	"fmt"
 	"path/filepath"
 
-	errors "github.com/w1lam/mc-pacman/internal/core/errors"
-	manifest "github.com/w1lam/mc-pacman/internal/core/manifest"
-	packages "github.com/w1lam/mc-pacman/internal/core/packages"
-	paths "github.com/w1lam/mc-pacman/internal/core/paths"
-	state "github.com/w1lam/mc-pacman/internal/core/state"
+	"github.com/w1lam/mc-pacman/internal/core/errors"
+	"github.com/w1lam/mc-pacman/internal/core/filesystem"
+	"github.com/w1lam/mc-pacman/internal/core/manifest"
+	"github.com/w1lam/mc-pacman/internal/core/packages"
+	"github.com/w1lam/mc-pacman/internal/core/paths"
+	"github.com/w1lam/mc-pacman/internal/core/state"
 )
 
-func VerifyAndReconcile(path *paths.Paths) {
-	gs := state.Get()
+func VerifyAndReconcile(p *paths.Paths, s *state.State) error {
+	var m *manifest.Manifest
 
-	var (
-		m     *manifest.Manifest
-		found []packages.InstalledPackage
-	)
-
-	gs.Read(func(s *state.State) {
+	s.Read(func(s *state.State) {
 		m = s.Manifest()
 	})
 
-	var err error
-	found, err = ScanActitvePackages(path)
+	found, err := ScanActitvePackages(p)
 	if err != nil {
 		errors.Report("startup.scan", err)
 	}
 
 	ReconcileActiveWithManifest(m, found)
 
-	verifyManifestPackages()
+	verifyManifestPackages(m)
 
-	_ = gs.Write(func(s *state.State) error {
-		return s.Manifest().Save()
+	return s.Write(func(s *state.State) error {
+		return s.Repo().Save(m)
 	})
 }
 
-func verifyManifestPackages() {
-	gs := state.Get()
+func verifyManifestPackages(m *manifest.Manifest) {
+	for pkgType, pkgs := range m.InstalledPackages {
+		for id, ip := range pkgs {
+			ok, err := VerifyPackageIntegrity(m, packages.Pkg{
+				Title: ip.Name,
+				ID:    id,
+				Type:  pkgType,
+			})
+			if err != nil {
+				errors.ReportCtx(
+					"startup.verify",
+					err,
+					map[string]string{
+						"name": ip.Name,
+						"type": ip.Type.TypeName,
+					},
+				)
+				continue
+			}
 
-	gs.Read(func(s *state.State) {
-		for pkgType, pkgs := range s.Manifest().InstalledPackages {
-			for name := range pkgs {
-				ok, err := VerifyPackageIntegrity(packages.Pkg{
-					Type: pkgType,
-					Name: name,
-				})
-				if err != nil {
-					errors.ReportCtx(
-						"startup.verify",
-						err,
-						map[string]string{
-							"name": name,
-							"type": string(pkgType),
-						},
-					)
-					continue
-				}
-
-				if !ok {
-					errors.ReportCtx(
-						"startup.verify",
-						fmt.Errorf("package integrity mismath"),
-						map[string]string{
-							"name": name,
-							"type": string(pkgType),
-						},
-					)
-				}
+			if !ok {
+				errors.ReportCtx(
+					"startup.verify",
+					fmt.Errorf("package integrity mismath"),
+					map[string]string{
+						"name": ip.Name,
+						"type": ip.Type.TypeName,
+					},
+				)
 			}
 		}
-	})
+	}
 }
 
-func VerifyPackageIntegrity(pkg packages.Pkg) (bool, error) {
-	gs := state.Get()
-
-	var (
-		iPkg    manifest.InstalledPackage
-		enabled bool
-		found   bool
-	)
-
-	gs.Read(func(s *state.State) {
-		if p, ok := s.Manifest().InstalledPackages[pkg.Type][pkg.Name]; ok {
-			iPkg = p
-			found = true
-		}
-		enabled = s.Manifest().EnabledPackages[pkg.Type] == pkg.Name
-	})
-
+// VerifyPackageIntegrity verifies packages integrity by computing hash and comparing it to hash in *PkgID*.id.json
+func VerifyPackageIntegrity(m *manifest.Manifest, pkg packages.Pkg) (bool, error) {
+	iPkg, found := m.InstalledPackages[pkg.Type][pkg.ID]
 	if !found {
-		return false, fmt.Errorf("package not installed: %s", pkg.Name)
+		return false, fmt.Errorf("package not installed: %s", pkg.Title)
 	}
+
+	enabled := m.EnabledPackages[pkg.Type] == pkg.ID
 
 	var path string
 	if enabled {
-		path = iPkg.ActivePath
+		path = iPkg.FullActivePath
 	} else {
-		path = iPkg.StoragePath
+		path = iPkg.FullStoragePath
 	}
 
 	hash, err := filesystem.ComputeDirHash(path)
@@ -108,7 +88,7 @@ func VerifyPackageIntegrity(pkg packages.Pkg) (bool, error) {
 		return false, err
 	}
 
-	pkgIDPath := filepath.Join(path, pkg.Name+".id.json")
+	pkgIDPath := filepath.Join(path, string(pkg.ID)+".id.json")
 	pkgID, err := manifest.ReadPackageIDFile(pkgIDPath)
 	if err != nil {
 		return false, err

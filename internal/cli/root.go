@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/w1lam/mc-pacman/internal/app"
 )
 
 var rootCmd = &cobra.Command{
@@ -13,7 +14,7 @@ var rootCmd = &cobra.Command{
 	Long:  "mcpac manages Minecraft modpacks, resource packs, and shaders.",
 }
 
-func Execute() {
+func Execute(app *app.App) {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

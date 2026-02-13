@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/w1lam/mc-pacman/internal/core/packages"
+	"github.com/w1lam/mc-pacman/internal/services/repository"
 )
 
 var installCmd = &cobra.Command{
@@ -13,9 +15,9 @@ var installCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		id := args[0]
 
-		pkg := packages.Pkg{
-			Name: id,
-			Type: "",
+		pkg, err := repository.GetSpecificPackage(packages.PkgID(id))
+		if err != nil {
+			return err
 		}
 
 		if err := actions.InstallPackage(pkg); err != nil {

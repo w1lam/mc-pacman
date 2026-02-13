@@ -1,70 +1,67 @@
 package packages
 
-import (
-	"github.com/w1lam/Packages/modrinth"
-)
-
-// AvailablePackages are all available packages found in github repo
-type AvailablePackages struct {
-	ModPacks            map[string]ResolvedPackage
-	ResourcePackBundles map[string]ResolvedPackage
-	ShaderPackBundles   map[string]ResolvedPackage
-	DatapackBundles     map[string]ResolvedPackage
-}
-
-// Pkg is a small pacakge struct used for passing around packages
-type Pkg struct {
-	Name string
-	ID   PkgID
-	Type PackageType
-}
+import "github.com/w1lam/Packages/modrinth"
 
 // PkgID is the ID of a package
 type PkgID string
 
-// ResolvedPackage is a resolved package that gets passed to the installer
-type ResolvedPackage struct {
-	Name string `json:"name"`
-	ID   PkgID  `json:"id"`
+// PkgType is the type of a package
+type PkgType int
 
-	ListVersion string `json:"listVersion"`
-	McVersion   string `json:"mcVersion"`
-	Loader      string `json:"loader"`
-	Env         string `json:"env"`
-	Description string `json:"description"`
+const (
+	PackageTypeModPack PkgType = iota
+	PackageTypeResourceBundle
+	PackageTypeShaderBundle
+	PackageTypeDataPack
+)
 
-	Type       PackageType `json:"pkgType"`
-	ListSource string      `json:"listSource"`
-	Hash       string      `json:"hash"` // sha512
-
-	Entries []modrinth.Entry `json:"entries"`
+// PackageType is the type of a package modpack/resourcebundle/shaderbundle?
+type PackageType struct {
+	PackageType PkgType            `json:"pkgType"`
+	TypeName    string             `json:"typeName"`
+	EntryType   modrinth.EntryType `json:"entryType"`
+	ActivePath  string             `json:"activePath"`
+	StorageDir  string             `json:"storageDir"` // package types storage dir ie .mc-pacman/packages/modpacks
 }
 
-// InstalledPackage is an installed package which holds all information about the package
-type InstalledPackage struct {
-	Name             string `json:"name"`
-	ID               PkgID  `json:"id"`
-	InstalledVersion string `json:"version"`
-	McVersion        string `json:"mcVersion"`
-	Loader           string `json:"loader"`
-
-	Type PackageType `json:"type"`
-
-	ListSource string                           `json:"listSource"`
-	Hash       string                           `json:"hash"`
-	Entries    map[string]InstalledPackageEntry `json:"installedEntries"`
-
-	FullActivePath  string `json:"activePath"`
-	FullStoragePath string `json:"storagePath"`
+// Pkg is a small pacakge struct used for passing around packages
+type Pkg struct {
+	Title string
+	ID    PkgID
+	Type  PkgType
 }
 
-// PackageEntry is a mod entry in the manifest that holds all information about an entry
-type InstalledPackageEntry struct {
-	Name             string `json:"name"`
-	ID               string `json:"id"` // id or slug
-	InstalledVersion string `json:"InstalledVersion"`
-
-	FileName string `json:"fileName"`
-	Sha512   string `json:"sha512"`
-	Sha1     string `json:"sha1,omitempty"`
+// PackageTypeIndex is the index of all PackageTypes with PkgType as key
+func PackageTypeIndex() map[PkgType]PackageType {
+	return map[PkgType]PackageType{
+		PackageTypeModPack: {
+			PackageType: PackageTypeModPack,
+			TypeName:    "Modpack",
+			EntryType:   modrinth.Mod,
+			ActivePath:  "mods",     // relative from mc dir
+			StorageDir:  "modpacks", // relative from mcDir/.mc-pacman/packages dir
+		},
+		PackageTypeResourceBundle: {
+			PackageType: PackageTypeResourceBundle,
+			TypeName:    "Resource Bundle",
+			EntryType:   modrinth.Resourcepack,
+			ActivePath:  "resourcepacks",   // relative from mc dir
+			StorageDir:  "resourcebundles", // relative from mcDir/.mc-pacman/packages dir
+		},
+		PackageTypeShaderBundle: {
+			PackageType: PackageTypeShaderBundle,
+			TypeName:    "Shader Bundle",
+			EntryType:   modrinth.Shaderpack,
+			ActivePath:  "shaderpacks",   // relative from mc dir
+			StorageDir:  "shaderbundles", // relative from mcDir/.mc-pacman/packages dir
+		},
+		// not really used not high on prio
+		PackageTypeDataPack: {
+			PackageType: PackageTypeDataPack,
+			TypeName:    "Datapack",
+			EntryType:   modrinth.Datapack,
+			ActivePath:  "",                // relative from mc dir
+			StorageDir:  "datapackbundles", // relative from mcDir/.mc-pacman/packages dir
+		},
+	}
 }

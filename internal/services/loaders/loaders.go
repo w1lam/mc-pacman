@@ -1,5 +1,7 @@
 package services
 
+import "github.com/w1lam/Packages/fabric"
+
 type SystemState struct {
 	FabricStatus FabricStatus
 	MCVersion    string

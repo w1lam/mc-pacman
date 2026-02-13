@@ -2,7 +2,7 @@ package menus
 
 import (
 	"github.com/w1lam/Packages/menu"
-	"github.com/w1lam/Raw-Mod-Installer/internal/manifest"
+	"github.com/w1lam/mc-pacman/internal/core/manifest"
 )
 
 // Menu IDs
@@ -22,10 +22,10 @@ func InitializeMenus(m *manifest.Manifest) {
 
 	// MAIN MENU
 	mainMenu := menu.NewMenu("Main Menu", "This is the Main Menu.", MainMenuID)
-	mainMenu.AddButton("Mod Packs", "", "Press M to view available Mod Packs", menu.ChangeMenu(ModPackMenuID), 'm', "modpacks")
-	mainMenu.AddButton("Resource Bundles (WIP)", "", "Press R to view available Resource Bundles", menu.ChangeMenu(ResourceMenuID), 'r', "resourceBundles")
-	mainMenu.AddButton("Updates (WIP)", "", "Press U for Update menu", menu.ChangeMenu(UpdateMenuID), 'u', "updateMenu")
-	mainMenu.AddButton("Help(WIP)", "", "Press H for help menu", menu.ChangeMenu(HelpMenuID), 'h', "help")
+	mainMenu.AddButton("Mod Packs", "", "Press M to view available Mod Packs", menu.ChangeMenuAction(ModPackMenuID), 'm', "modpacks")
+	mainMenu.AddButton("Resource Bundles (WIP)", "", "Press R to view available Resource Bundles", menu.ChangeMenuAction(ResourceMenuID), 'r', "resourceBundles")
+	mainMenu.AddButton("Updates (WIP)", "", "Press U for Update menu", menu.ChangeMenuAction(UpdateMenuID), 'u', "updateMenu")
+	mainMenu.AddButton("Help(WIP)", "", "Press H for help menu", menu.ChangeMenuAction(HelpMenuID), 'h', "help")
 
 	// RESOURCE BUNDLE MENU NOT FINISHED
 	// resourceMenu := BuildResourceBundleMenu()
@@ -41,11 +41,11 @@ func InitializeMenus(m *manifest.Manifest) {
 	updateMenu := menu.NewMenu("Update Menu", "This is the Update Menu(CURRENTLY NOT IMPLEMENTED)", UpdateMenuID)
 	updateMenu.AddButton("Check for Updates", "", "Press C to check for Updates", menu.Action{}, 'c', "updateCheck")
 	updateMenu.AddButton("Update All", "", "Press U to Install Available Updates", menu.Action{}, 'u', "updateAll")
-	updateMenu.AddButton("Back", "", "Press B to go Back", menu.ChangeMenu(MainMenuID), 'b', "back")
+	updateMenu.AddButton("Back", "", "Press B to go Back", menu.BackAction(), 'b', "back")
 
 	// HELP MENU
 	helpMenu := menu.NewMenu("Help Menu", "This is the Help Menu", HelpMenuID)
-	helpMenu.AddButton("Back", "", "Press B to go Back", menu.ChangeMenu(MainMenuID), 'b', "back")
+	helpMenu.AddButton("Back", "", "Press B to go Back", menu.BackAction(), 'b', "back")
 
 	menu.MustSetCurrent(MainMenuID)
 }
