@@ -57,7 +57,7 @@ func ComputeDirHash(dir string) (string, error) {
 		return nil
 	})
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
 	sort.Slice(entries, func(i, j int) bool {
@@ -69,7 +69,7 @@ func ComputeDirHash(dir string) (string, error) {
 	enc.SetEscapeHTML(false)
 
 	if err := enc.Encode(entries); err != nil {
-		return "", nil
+		return "", err
 	}
 
 	return hex.EncodeToString(h.Sum(nil)), nil

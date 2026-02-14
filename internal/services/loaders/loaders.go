@@ -1,4 +1,4 @@
-package services
+package loaders
 
 import "github.com/w1lam/Packages/fabric"
 

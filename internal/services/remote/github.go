@@ -1,4 +1,4 @@
-package repository
+package remote
 
 import (
 	"encoding/json"

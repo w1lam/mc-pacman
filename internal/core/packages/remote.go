@@ -27,7 +27,7 @@ type RemotePackageIndex map[PkgType]map[PkgID]RemotePackage
 func BlankRemotePackageIndex() RemotePackageIndex {
 	index := make(RemotePackageIndex)
 
-	for pkgType := range PackageTypeIndex() {
+	for pkgType := range PackageTypeIndex {
 		index[pkgType] = make(map[PkgID]RemotePackage)
 	}
 

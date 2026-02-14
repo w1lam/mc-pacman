@@ -1,3 +1,4 @@
+// Package packages
 package packages
 
 import "github.com/w1lam/Packages/modrinth"
@@ -32,36 +33,34 @@ type Pkg struct {
 }
 
 // PackageTypeIndex is the index of all PackageTypes with PkgType as key
-func PackageTypeIndex() map[PkgType]PackageType {
-	return map[PkgType]PackageType{
-		PackageTypeModPack: {
-			PackageType: PackageTypeModPack,
-			TypeName:    "Modpack",
-			EntryType:   modrinth.Mod,
-			ActivePath:  "mods",     // relative from mc dir
-			StorageDir:  "modpacks", // relative from mcDir/.mc-pacman/packages dir
-		},
-		PackageTypeResourceBundle: {
-			PackageType: PackageTypeResourceBundle,
-			TypeName:    "Resource Bundle",
-			EntryType:   modrinth.Resourcepack,
-			ActivePath:  "resourcepacks",   // relative from mc dir
-			StorageDir:  "resourcebundles", // relative from mcDir/.mc-pacman/packages dir
-		},
-		PackageTypeShaderBundle: {
-			PackageType: PackageTypeShaderBundle,
-			TypeName:    "Shader Bundle",
-			EntryType:   modrinth.Shaderpack,
-			ActivePath:  "shaderpacks",   // relative from mc dir
-			StorageDir:  "shaderbundles", // relative from mcDir/.mc-pacman/packages dir
-		},
-		// not really used not high on prio
-		PackageTypeDataPack: {
-			PackageType: PackageTypeDataPack,
-			TypeName:    "Datapack",
-			EntryType:   modrinth.Datapack,
-			ActivePath:  "",                // relative from mc dir
-			StorageDir:  "datapackbundles", // relative from mcDir/.mc-pacman/packages dir
-		},
-	}
+var PackageTypeIndex = map[PkgType]PackageType{
+	PackageTypeModPack: {
+		PackageType: PackageTypeModPack,
+		TypeName:    "Modpack",
+		EntryType:   modrinth.Mod,
+		ActivePath:  "mods",     // relative from mc dir
+		StorageDir:  "modpacks", // relative from mcDir/.mc-pacman/packages dir
+	},
+	PackageTypeResourceBundle: {
+		PackageType: PackageTypeResourceBundle,
+		TypeName:    "Resource Bundle",
+		EntryType:   modrinth.Resourcepack,
+		ActivePath:  "resourcepacks",   // relative from mc dir
+		StorageDir:  "resourcebundles", // relative from mcDir/.mc-pacman/packages dir
+	},
+	PackageTypeShaderBundle: {
+		PackageType: PackageTypeShaderBundle,
+		TypeName:    "Shader Bundle",
+		EntryType:   modrinth.Shaderpack,
+		ActivePath:  "shaderpacks",   // relative from mc dir
+		StorageDir:  "shaderbundles", // relative from mcDir/.mc-pacman/packages dir
+	},
+	// not really used not high on prio
+	PackageTypeDataPack: {
+		PackageType: PackageTypeDataPack,
+		TypeName:    "Datapack",
+		EntryType:   modrinth.Datapack,
+		ActivePath:  "",                // relative from mc dir
+		StorageDir:  "datapackbundles", // relative from mcDir/.mc-pacman/packages dir
+	},
 }

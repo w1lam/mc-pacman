@@ -1,4 +1,4 @@
-package services
+package meta
 
 import (
 	"encoding/json"

@@ -1,3 +1,4 @@
+// Package app is da app bruh
 package app
 
 import (
@@ -5,13 +6,13 @@ import (
 	"github.com/w1lam/mc-pacman/internal/core/filesystem"
 	"github.com/w1lam/mc-pacman/internal/core/manifest"
 	"github.com/w1lam/mc-pacman/internal/core/paths"
-	"github.com/w1lam/mc-pacman/internal/core/state"
-	"github.com/w1lam/mc-pacman/internal/core/verify"
 )
 
 type App struct {
 	Paths *paths.Paths
-	State *state.State
+	Repo  manifest.Repository
+
+	Services *Services
 }
 
 // New creates a new App initializing core of app
@@ -36,21 +37,16 @@ func New() (*App, error) {
 	repo := manifest.NewFileRepository(p.ManifestPath)
 
 	// manifest init
-	m, err := repo.Init()
-	if err != nil {
+	if err := repo.EnsureInitialized(); err != nil {
 		return nil, err
 	}
 
-	// Init State
-	st, err := state.New(m, repo)
-	if err != nil {
-		return nil, err
-	}
-
-	// Verify packages
-	verify.VerifyAndReconcile(p)
+	services := InitServices(p, repo)
 
 	return &App{
-		State: st,
+		Repo:  repo,
+		Paths: p,
+
+		Services: services,
 	}, nil
 }

@@ -1,4 +1,4 @@
-package ux
+package cli
 
 import (
 	"fmt"
@@ -10,8 +10,8 @@ import (
 func CliPackageListRenderer(pkgIndex packages.RemotePackageIndex) {
 	for pType, pkgs := range pkgIndex {
 		fmt.Println()
-		fmt.Println(strings.ToUpper(packages.PackageTypeIndex()[pType].TypeName) + "S:")
-		fmt.Println(strings.Repeat("-", len(packages.PackageTypeIndex()[pType].TypeName)) + "---")
+		fmt.Println(strings.ToUpper(packages.PackageTypeIndex[pType].TypeName) + "S:")
+		fmt.Println(strings.Repeat("-", len(packages.PackageTypeIndex[pType].TypeName)) + "---")
 		for _, pkg := range pkgs {
 			fmt.Println(" " + pkg.Name)
 			fmt.Println(" - List Version:", pkg.ListVersion)

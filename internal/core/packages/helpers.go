@@ -4,7 +4,7 @@ package packages
 func (p *InstalledPackage) GetHashes() []string {
 	var hashes []string
 	for _, mod := range p.Entries {
-		hashes = append(hashes, mod.Sha512)
+		hashes = append(hashes, mod.Hash)
 	}
 	return hashes
 }
