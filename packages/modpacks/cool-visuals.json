@@ -6,7 +6,11 @@
   "loader": "fabric",
   "env": "client",
   "description": "Client Side only modpack with cool visual and performance mods.",
-  "pkgType": "modpack",
+  "pkgType": {
+    "pkgType": 0,
+    "typeName": "modpack",
+    "entryType": "mod"
+  },
   "listSource": "",
   "hash": "",
   "entries": [

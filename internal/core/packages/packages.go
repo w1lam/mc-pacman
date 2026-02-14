@@ -21,8 +21,8 @@ type PackageType struct {
 	PackageType PkgType            `json:"pkgType"`
 	TypeName    string             `json:"typeName"`
 	EntryType   modrinth.EntryType `json:"entryType"`
-	ActivePath  string             `json:"activePath"`
-	StorageDir  string             `json:"storageDir"` // package types storage dir ie .mc-pacman/packages/modpacks
+	ActivePath  string             `json:"-"`
+	StorageDir  string             `json:"-"` // package types storage dir ie .mc-pacman/packages/modpacks
 }
 
 // Pkg is a small pacakge struct used for passing around packages

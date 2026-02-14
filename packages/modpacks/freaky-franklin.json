@@ -6,7 +6,11 @@
   "loader": "fabric",
   "env": "Client and Server",
   "description": "Mod Pack for Freaky Franklin server that mainly adds visual and small immersion and building mods.",
-  "pkgType": "modpack",
+  "pkgType": {
+    "pkgType": 0,
+    "typeName": "modpack",
+    "entryType": "mod"
+  },
   "listSource": "",
   "hash": "",
   "entries": [
