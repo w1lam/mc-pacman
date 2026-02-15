@@ -1,3 +1,4 @@
+// Package paths builds all paths
 package paths
 
 import (

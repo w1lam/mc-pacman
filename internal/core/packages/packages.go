@@ -10,9 +10,13 @@ type PkgID string
 type PkgType int
 
 const (
+	// modpack type constant
 	PackageTypeModPack PkgType = iota
+	// resourcebundle type constant
 	PackageTypeResourceBundle
+	// shaderbundle type constant
 	PackageTypeShaderBundle
+	// datapackbundle type constant
 	PackageTypeDataPack
 )
 

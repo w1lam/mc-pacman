@@ -19,6 +19,7 @@ type ResolvedFile struct {
 	ID       modrinth.ID
 	Version  string
 	FileName string
+	Size     int64
 	URL      string
 	Hash     string
 	Algo     string
@@ -59,6 +60,7 @@ func (r *Service) Resolve(
 			ID:       id,
 			Version:  version.VersionNumber,
 			FileName: primaryFile.FileName,
+			Size:     primaryFile.Size,
 			URL:      primaryFile.URL,
 			Hash:     primaryFile.Hashes.Sha512,
 			Algo:     "sha512",

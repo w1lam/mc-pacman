@@ -1,6 +1,8 @@
 package installer
 
 import (
+	"fmt"
+
 	"github.com/w1lam/Packages/modrinth"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
 	"github.com/w1lam/mc-pacman/internal/services/downloader"
@@ -15,7 +17,7 @@ func buildInstalledPackage(
 	storagePath string,
 	activePath string,
 	fullHash string,
-) packages.InstalledPackage {
+) (packages.InstalledPackage, error) {
 	entries := make(map[modrinth.ID]packages.InstalledPackageEntry)
 
 	resultMap := make(map[modrinth.ID]downloader.FileResult)
@@ -26,7 +28,7 @@ func buildInstalledPackage(
 	for _, r := range resolved {
 		result, ok := resultMap[r.ID]
 		if !ok {
-			panic("missing downloader result for resolved file: " + string(r.ID))
+			return packages.InstalledPackage{}, fmt.Errorf("missing downloader result for resolved file: %s", string(r.ID))
 		}
 
 		entries[r.ID] = buildInstalledPackageEntry(r, result)
@@ -44,7 +46,7 @@ func buildInstalledPackage(
 		Entries:          entries,
 		FullActivePath:   activePath,
 		FullStoragePath:  storagePath,
-	}
+	}, nil
 }
 
 // buildInstalledPackageEntry builds an installed package entry from downloader results
@@ -67,6 +69,7 @@ func buildFileRequests(resolvedFiles []resolver.ResolvedFile) []downloader.FileR
 			ID:       r.ID,
 			URL:      r.URL,
 			FileName: r.FileName,
+			Size:     r.Size,
 			Hash:     r.Hash,
 			Algo:     r.Algo,
 		})

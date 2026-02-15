@@ -16,12 +16,14 @@ import (
 	"time"
 
 	"github.com/w1lam/Packages/modrinth"
+	"github.com/w1lam/mc-pacman/internal/ux/progress"
 )
 
 // Service is the downloader service
 type Service struct {
 	client      *http.Client
 	maxParallel int
+	emitter     progress.ProgressEmitter
 }
 
 func New() *Service {
@@ -37,6 +39,7 @@ type FileRequest struct {
 	ID       modrinth.ID
 	URL      string
 	FileName string
+	Size     int64
 	Hash     string
 	Algo     string
 }
@@ -74,8 +77,26 @@ func (s *Service) DownloadBatch(
 			}
 			defer func() { <-sem }()
 
+			if s.emitter != nil {
+				s.emitter.Emit(progress.ProgressEvent{
+					Type:       progress.ProgressStart,
+					PackageID:  string(file.ID),
+					FileName:   file.FileName,
+					Percentage: 0,
+				})
+			}
+
 			res, err := s.downloadOne(ctx, destDir, file)
 			if err != nil {
+				if s.emitter != nil {
+					s.emitter.Emit(progress.ProgressEvent{
+						Type:      progress.ProgressFailure,
+						PackageID: string(file.ID),
+						FileName:  file.FileName,
+						Error:     err,
+					})
+				}
+
 				select {
 				case errCh <- err:
 				default:
@@ -86,8 +107,32 @@ func (s *Service) DownloadBatch(
 			mu.Lock()
 			results = append(results, res)
 			mu.Unlock()
+
+			if s.emitter != nil {
+				s.emitter.Emit(progress.ProgressEvent{
+					Type:       progress.ProgressSuccess,
+					PackageID:  string(file.ID),
+					FileName:   file.FileName,
+					Percentage: 100,
+				})
+			}
 		}()
 	}
+
+	wg.Wait()
+
+	select {
+	case err := <-errCh:
+		return results, err
+	default:
+	}
+
+	if s.emitter != nil {
+		s.emitter.Emit(progress.ProgressEvent{
+			Type: progress.ProgressComplete,
+		})
+	}
+
 	return results, nil
 }
 
@@ -131,6 +176,34 @@ func (s *Service) downloadOne(
 
 	writer := io.MultiWriter(outFile, hasher)
 
+	buf := make([]byte, 32*1024)
+	var downloaded int64
+	for {
+		n, err := resp.Body.Read(buf)
+		if n > 0 {
+			if _, werr := writer.Write(buf[:n]); werr != nil {
+				return FileResult{}, werr
+			}
+
+			downloaded += int64(n)
+			if s.emitter != nil && file.Size > 0 {
+				s.emitter.Emit(progress.ProgressEvent{
+					Type:       progress.ProgressUpdate,
+					PackageID:  string(file.ID),
+					FileName:   file.FileName,
+					Percentage: float64(downloaded) / float64(file.Size) * 100,
+				})
+			}
+		}
+
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return FileResult{}, err
+		}
+	}
+
 	if _, err := io.Copy(writer, resp.Body); err != nil {
 		return FileResult{}, err
 	}
@@ -146,4 +219,8 @@ func (s *Service) downloadOne(
 		FileName: file.FileName,
 		Hash:     computed,
 	}, nil
+}
+
+func (s *Service) SetEmitter(e progress.ProgressEmitter) {
+	s.emitter = e
 }

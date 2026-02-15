@@ -134,7 +134,7 @@ func (r *FileRepository) EnsureInitialized() error {
 	defer r.mu.Unlock()
 
 	_, err := os.Stat(r.path)
-	if err != nil {
+	if err == nil {
 		return nil
 	}
 

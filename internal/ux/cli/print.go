@@ -14,6 +14,7 @@ func CliPackageListRenderer(pkgIndex packages.RemotePackageIndex) {
 		fmt.Println(strings.Repeat("-", len(packages.PackageTypeIndex[pType].TypeName)) + "---")
 		for _, pkg := range pkgs {
 			fmt.Println(" " + pkg.Name)
+			fmt.Println(" * ID:", pkg.ID)
 			fmt.Println(" - List Version:", pkg.ListVersion)
 			fmt.Println(" - Minecraft Version:", pkg.McVersion)
 			if pkg.Description != "" {

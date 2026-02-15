@@ -14,33 +14,20 @@ func EnsureDirectories(path *paths.Paths) error {
 		return fmt.Errorf("minecraft directory not found")
 	}
 
-	if !utils.CheckFileExists(path.RootDir) {
-		err := os.MkdirAll(path.RootDir, 0o755)
-		if err != nil {
-			return err
-		}
+	dirs := []string{
+		path.RootDir,
+		path.DataDir,
+		path.PackagesDir,
+		path.BackupsDir,
 	}
 
-	if !utils.CheckFileExists(path.DataDir) {
-		err := os.MkdirAll(path.DataDir, 0o755)
-		if err != nil {
-			return err
+	for _, dir := range dirs {
+		if !utils.CheckFileExists(dir) {
+			err := os.MkdirAll(dir, 0o755)
+			if err != nil {
+				return err
+			}
 		}
 	}
-
-	if !utils.CheckFileExists(path.PackagesDir) {
-		err := os.MkdirAll(path.PackagesDir, 0o755)
-		if err != nil {
-			return err
-		}
-	}
-
-	if !utils.CheckFileExists(path.BackupsDir) {
-		err := os.MkdirAll(path.BackupsDir, 0o755)
-		if err != nil {
-			return err
-		}
-	}
-
 	return nil
 }

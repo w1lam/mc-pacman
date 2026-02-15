@@ -3,12 +3,9 @@ package installer
 import (
 	"os"
 	"path/filepath"
-
-	"github.com/w1lam/mc-pacman/internal/core/packages"
 )
 
 func (s *Service) installToStorage(
-	pkg packages.RemotePackage,
 	tempDir string,
 	finalDir string,
 ) error {

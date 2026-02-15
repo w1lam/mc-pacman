@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/w1lam/mc-pacman/internal/core/filesystem"
 	"github.com/w1lam/mc-pacman/internal/core/manifest"
@@ -14,6 +15,7 @@ import (
 	"github.com/w1lam/mc-pacman/internal/core/paths"
 	"github.com/w1lam/mc-pacman/internal/services/downloader"
 	"github.com/w1lam/mc-pacman/internal/services/resolver"
+	"github.com/w1lam/mc-pacman/internal/ux/progress"
 )
 
 // Service Installer service
@@ -21,6 +23,7 @@ type Service struct {
 	paths      *paths.Paths
 	repo       manifest.Repository
 	downloader *downloader.Service
+	emitter    progress.ProgressEmitter
 	// modrinth   *modrinth.Client
 }
 
@@ -37,6 +40,14 @@ func (s *Service) Install(ctx context.Context, pkg packages.RemotePackage) error
 	if pkg.ID == "" || len(pkg.Entries) == 0 {
 		return errors.New("invalid package")
 	}
+
+	s.emitter.Emit(progress.ProgressEvent{
+		Type:      progress.ProgressStart,
+		Context:   "installer",
+		PackageID: string(pkg.ID),
+		Message:   fmt.Sprintf("installing %s", pkg.Name),
+		Timestamp: time.Now(),
+	})
 
 	// grab manifest
 	m, err := s.repo.Load()
@@ -56,7 +67,7 @@ func (s *Service) Install(ctx context.Context, pkg packages.RemotePackage) error
 	}
 
 	// temp dir
-	tmp, err := os.MkdirTemp(s.paths.RootDir, "download.tmp")
+	tmp, err := os.MkdirTemp(s.paths.PackagesDir, "download.tmp")
 	if err != nil {
 		return err
 	}
@@ -73,7 +84,7 @@ func (s *Service) Install(ctx context.Context, pkg packages.RemotePackage) error
 	fullStoragePath := filepath.Join(s.paths.PackagesDir, meta.StorageDir, string(pkg.ID))
 
 	// install to final dir
-	if err := s.installToStorage(pkg, tmp, fullStoragePath); err != nil {
+	if err := s.installToStorage(tmp, fullStoragePath); err != nil {
 		return err
 	}
 
@@ -84,10 +95,25 @@ func (s *Service) Install(ctx context.Context, pkg packages.RemotePackage) error
 	}
 
 	// build installed package
-	installed := buildInstalledPackage(pkg, resolved, results, fullStoragePath, fullActivePath, fullHash)
+	installed, err := buildInstalledPackage(pkg, resolved, results, fullStoragePath, fullActivePath, fullHash)
+	if err != nil {
+		return err
+	}
 
 	// set installed package
 	m.InstalledPackages[pkg.Type.PackageType][pkg.ID] = installed
 
+	s.emitter.Emit(progress.ProgressEvent{
+		Type:      progress.ProgressSuccess,
+		Context:   "installer",
+		PackageID: string(pkg.ID),
+		Message:   fmt.Sprintf("%s installed!", pkg.Name),
+		Timestamp: time.Now(),
+	})
+
 	return s.repo.Save(m)
+}
+
+func (s *Service) SetEmitter(e progress.ProgressEmitter) {
+	s.emitter = e
 }
