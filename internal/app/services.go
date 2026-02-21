@@ -44,5 +44,6 @@ func initServices(
 		Installer: i,
 		Updater:   nil,
 		Verifier:  v,
+		Lister:    l,
 	}
 }

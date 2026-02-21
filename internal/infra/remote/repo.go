@@ -63,7 +63,7 @@ func (r *RemoteRepository) GetAll(ctx context.Context) (packages.RemotePackageIn
 		rURL := fmt.Sprintf("%spackages/%s/%s/pkg.json", r.rawURL, pType.StorageDir, pkg.ID)
 
 		var remotePkg packages.RemotePackage
-		err := r.githubJSONResp(ctx, rURL, remotePkg)
+		err := r.githubJSONResp(ctx, rURL, &remotePkg)
 		if err != nil {
 			return nil, err
 		}

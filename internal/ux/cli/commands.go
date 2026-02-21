@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"context"
 	"fmt"
 	"os"
 
@@ -40,7 +39,7 @@ func newInstallCmd(a *app.App) *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			id := args[0]
 
-			var ctx context.Context
+			ctx := cmd.Context()
 
 			pkg, err := a.Services.Installer.RemoteRepo.GetByID(ctx, packages.PkgID(id))
 			if err != nil {
@@ -56,7 +55,7 @@ func newListCmd(a *app.App) *cobra.Command {
 		Use:   "list",
 		Short: "List available packages",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			var ctx context.Context
+			ctx := cmd.Context()
 			return a.Services.Lister.ListAllRemote(ctx)
 		},
 	}
