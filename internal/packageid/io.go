@@ -1,4 +1,4 @@
-package manifest
+package packageid
 
 import (
 	"encoding/json"

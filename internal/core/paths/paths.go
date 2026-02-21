@@ -2,70 +2,72 @@
 package paths
 
 import (
-	"fmt"
-	"os"
 	"path/filepath"
-	"runtime"
 )
 
+// Paths is the object holding all paths
 type Paths struct {
-	MinecraftDir     string
-	ModsDir          string
-	ResourcePacksDir string
-	ShaderPacksDir   string
+	MinecraftDir     string `json:"mcDir"`
+	ModsDir          string `json:"modsDir"`
+	ResourcePacksDir string `json:"resourcePacksDir"`
+	ShaderPacksDir   string `json:"shaderPacksDir"`
 
-	RootDir string
+	RootDir   string `json:"rootDir"`
+	PathsPath string `json:"pathsPath"`
 
-	DataDir      string
-	ManifestPath string
-	MetaDataPath string
+	DataDir      string `json:"dataDir"`
+	ManifestPath string `json:"manifestPath"`
+	MetaDataPath string `json:"metaDatapath"`
 
-	PackagesDir string
-	BackupsDir  string
-	LogPath     string
+	PackagesDir string `json:"packagesDir"`
+	BackupsDir  string `json:"backupsDir"`
+	LogPath     string `json:"logPath"`
 }
 
-func DefaultMinecraftDir() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", err
-	}
-
-	switch runtime.GOOS {
-	case "windows":
-		return filepath.Join(home, "AppData", "Roaming", ".minecraft"), nil
-	case "linux":
-		return filepath.Join(home, ".minecraft"), nil
-	case "darwin":
-		return filepath.Join(home, "Library", "Application Support", "minecraft"), nil
-	default:
-		return "", fmt.Errorf("unsupported OS: %s", runtime.GOOS)
-	}
-}
-
-func Resolve() (*Paths, error) {
-	mcDir, err := DefaultMinecraftDir()
-	if err != nil {
-		return nil, err
-	}
-
-	rootDir := filepath.Join(mcDir, ".mc-pacman")
-	dataDir := filepath.Join(rootDir, "data")
-
+// New creates a new Paths object
+func New(root, mcDir string) *Paths {
+	dataDir := filepath.Join(root, "data")
 	return &Paths{
 		MinecraftDir:     mcDir,
 		ModsDir:          filepath.Join(mcDir, "mods"),
 		ResourcePacksDir: filepath.Join(mcDir, "resourcepacks"),
 		ShaderPacksDir:   filepath.Join(mcDir, "shaderpacks"),
 
-		RootDir: rootDir,
+		RootDir:   root,
+		PathsPath: filepath.Join(root, "paths.json"),
 
 		DataDir:      dataDir,
 		ManifestPath: filepath.Join(dataDir, "manifest.json"),
 		MetaDataPath: filepath.Join(dataDir, "meta.json"),
 
-		PackagesDir: filepath.Join(rootDir, "packages"),
-		BackupsDir:  filepath.Join(rootDir, "backups"),
-		LogPath:     filepath.Join(rootDir, "logs.log"),
-	}, nil
+		PackagesDir: filepath.Join(root, "packages"),
+		BackupsDir:  filepath.Join(root, "backups"),
+		LogPath:     filepath.Join(root, "logs.log"),
+	}
+}
+
+// Init initializes paths with its repo
+func (r *JSONPathsRepository) Init() (*Paths, error) {
+	p, err := r.Load()
+	if err != nil {
+		return nil, err
+	}
+
+	if p != nil {
+		return p, nil
+	}
+
+	mcDir, err := detectOrPromptMinecraftDir()
+	if err != nil {
+		return nil, err
+	}
+
+	root := filepath.Dir(r.file)
+	p = New(root, mcDir)
+
+	if err := r.Save(p); err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }

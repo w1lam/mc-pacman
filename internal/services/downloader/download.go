@@ -16,18 +16,23 @@ import (
 	"time"
 
 	"github.com/w1lam/Packages/modrinth"
-	"github.com/w1lam/mc-pacman/internal/ux/progress"
+	"github.com/w1lam/mc-pacman/internal/events"
+	"github.com/w1lam/mc-pacman/internal/services"
 )
 
 // Service is the downloader service
-type Service struct {
+type Downloader struct {
+	services.Base
 	client      *http.Client
 	maxParallel int
-	emitter     progress.ProgressEmitter
 }
 
-func New() *Service {
-	return &Service{
+func New() *Downloader {
+	return &Downloader{
+		Base: services.Base{
+			Scope:   events.ScopeDownloader,
+			Emitter: nil,
+		},
 		client: &http.Client{
 			Timeout: 30 * time.Second,
 		},
@@ -50,7 +55,7 @@ type FileResult struct {
 	Hash     string
 }
 
-func (s *Service) DownloadBatch(
+func (s *Downloader) DownloadBatch(
 	ctx context.Context,
 	destDir string,
 	files []FileRequest,
@@ -62,6 +67,14 @@ func (s *Service) DownloadBatch(
 		sem     = make(chan struct{}, s.maxParallel)
 		errCh   = make(chan error, 1)
 	)
+
+	op := events.NewOperation(s.Scope, destDir)
+
+	s.Emit(events.Event{
+		Type:    events.EventStart,
+		Op:      op,
+		Message: fmt.Sprintf("[%s] starting download", s.Scope),
+	})
 
 	for _, file := range files {
 		file := file
@@ -77,25 +90,21 @@ func (s *Service) DownloadBatch(
 			}
 			defer func() { <-sem }()
 
-			if s.emitter != nil {
-				s.emitter.Emit(progress.ProgressEvent{
-					Type:       progress.ProgressStart,
-					PackageID:  string(file.ID),
-					FileName:   file.FileName,
-					Percentage: 0,
-				})
-			}
+			s.Emit(events.Event{
+				Type:       events.EventUpdate,
+				Op:         op,
+				FileName:   file.FileName,
+				Percentage: 0,
+			})
 
-			res, err := s.downloadOne(ctx, destDir, file)
+			res, err := s.downloadOne(ctx, op, destDir, file)
 			if err != nil {
-				if s.emitter != nil {
-					s.emitter.Emit(progress.ProgressEvent{
-						Type:      progress.ProgressFailure,
-						PackageID: string(file.ID),
-						FileName:  file.FileName,
-						Error:     err,
-					})
-				}
+				s.Emit(events.Event{
+					Type:     events.EventFailure,
+					Op:       op,
+					FileName: file.FileName,
+					Error:    err,
+				})
 
 				select {
 				case errCh <- err:
@@ -108,14 +117,12 @@ func (s *Service) DownloadBatch(
 			results = append(results, res)
 			mu.Unlock()
 
-			if s.emitter != nil {
-				s.emitter.Emit(progress.ProgressEvent{
-					Type:       progress.ProgressSuccess,
-					PackageID:  string(file.ID),
-					FileName:   file.FileName,
-					Percentage: 100,
-				})
-			}
+			s.Emit(events.Event{
+				Type:       events.EventSuccess,
+				Op:         op,
+				FileName:   file.FileName,
+				Percentage: 100,
+			})
 		}()
 	}
 
@@ -127,21 +134,23 @@ func (s *Service) DownloadBatch(
 	default:
 	}
 
-	if s.emitter != nil {
-		s.emitter.Emit(progress.ProgressEvent{
-			Type: progress.ProgressComplete,
-		})
-	}
+	s.Emit(events.Event{
+		Type:       events.EventComplete,
+		Op:         op,
+		FileName:   destDir,
+		Percentage: 100,
+	})
 
 	return results, nil
 }
 
-func (s *Service) downloadOne(
+func (s *Downloader) downloadOne(
 	ctx context.Context,
+	op events.Operation,
 	destDir string,
 	file FileRequest,
 ) (FileResult, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", file.URL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, file.URL, nil)
 	if err != nil {
 		return FileResult{}, err
 	}
@@ -186,14 +195,13 @@ func (s *Service) downloadOne(
 			}
 
 			downloaded += int64(n)
-			if s.emitter != nil && file.Size > 0 {
-				s.emitter.Emit(progress.ProgressEvent{
-					Type:       progress.ProgressUpdate,
-					PackageID:  string(file.ID),
-					FileName:   file.FileName,
-					Percentage: float64(downloaded) / float64(file.Size) * 100,
-				})
-			}
+			s.Emit(events.Event{
+				Type:       events.EventUpdate,
+				Op:         op,
+				FileName:   file.FileName,
+				Percentage: float64(downloaded) / float64(file.Size) * 100,
+				Message:    "downloading",
+			})
 		}
 
 		if err == io.EOF {
@@ -211,16 +219,22 @@ func (s *Service) downloadOne(
 	computed := hex.EncodeToString(hasher.Sum(nil))
 
 	if file.Hash != "" && computed != file.Hash {
+		s.Emit(events.Event{
+			Type:    events.EventFailure,
+			Message: fmt.Sprintf("[%s] hash mismath for %s", s.Scope, file.ID),
+			Error:   fmt.Errorf("hash mismatch for %s", file.ID),
+		})
 		return FileResult{}, fmt.Errorf("hash mismatch for %s", file.ID)
 	}
+
+	s.Emit(events.Event{
+		Type: events.EventComplete,
+		Op:   op,
+	})
 
 	return FileResult{
 		ID:       file.ID,
 		FileName: file.FileName,
 		Hash:     computed,
 	}, nil
-}
-
-func (s *Service) SetEmitter(e progress.ProgressEmitter) {
-	s.emitter = e
 }

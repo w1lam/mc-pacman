@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "id": "freaky-franklin",
+      "type": 0
+    },
+    {
+      "id": "freaky-franklin-serverside",
+      "type": 0
+    },
+    {
+      "id": "cool-visuals",
+      "type": 0
+    },
+    {
+      "id": "visual-enhance",
+      "type": 1
+    }
+  ]
+}

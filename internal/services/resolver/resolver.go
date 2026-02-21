@@ -7,12 +7,21 @@ import (
 
 	"github.com/w1lam/Packages/modrinth"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
+	"github.com/w1lam/mc-pacman/internal/events"
+	"github.com/w1lam/mc-pacman/internal/services"
 )
 
-type Service struct{}
+type Resolver struct {
+	services.Base
+}
 
-func New() *Service {
-	return &Service{}
+func New() *Resolver {
+	return &Resolver{
+		Base: services.Base{
+			Scope:   events.ScopeResolver,
+			Emitter: nil,
+		},
+	}
 }
 
 type ResolvedFile struct {
@@ -26,7 +35,7 @@ type ResolvedFile struct {
 }
 
 // Resolve resolves a remote package to a slice of downloader.FileRequest ready for download
-func (r *Service) Resolve(
+func (r *Resolver) Resolve(
 	ctx context.Context,
 	pkg packages.RemotePackage,
 ) ([]ResolvedFile, error) {

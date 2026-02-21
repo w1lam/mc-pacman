@@ -1,6 +1,10 @@
 package packages
 
-import "github.com/w1lam/Packages/modrinth"
+import (
+	"context"
+
+	"github.com/w1lam/Packages/modrinth"
+)
 
 // RemotePackage is a resolved package that gets passed to the installer
 type RemotePackage struct {
@@ -20,9 +24,6 @@ type RemotePackage struct {
 	Entries []modrinth.Entry `json:"entries"`
 }
 
-// RemotePackageIndex are all available packages found in github repo
-type RemotePackageIndex map[PkgType]map[PkgID]RemotePackage
-
 // BlankRemotePackageIndex creates an empty RemotePackagesIndex and safely initiates all maps
 func BlankRemotePackageIndex() RemotePackageIndex {
 	index := make(RemotePackageIndex)
@@ -32,4 +33,13 @@ func BlankRemotePackageIndex() RemotePackageIndex {
 	}
 
 	return index
+}
+
+// RemotePackageIndex are all available packages found in github repo
+type RemotePackageIndex map[PkgType]map[PkgID]RemotePackage
+
+// RemoteRepo is the interface for fetching packages from remote sources (e.g. github)
+type RemoteRepo interface {
+	GetAll(ctx context.Context) (RemotePackageIndex, error)
+	GetByID(ctx context.Context, id PkgID) (RemotePackage, error)
 }

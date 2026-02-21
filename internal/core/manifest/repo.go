@@ -10,7 +10,7 @@ import (
 	"github.com/w1lam/mc-pacman/internal/core/packages"
 )
 
-type Repository interface {
+type Repo interface {
 	Load() (*Manifest, error)
 	Save(*Manifest) error
 	Update(func(*Manifest) error) error

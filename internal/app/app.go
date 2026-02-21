@@ -6,19 +6,24 @@ import (
 	"github.com/w1lam/mc-pacman/internal/core/filesystem"
 	"github.com/w1lam/mc-pacman/internal/core/manifest"
 	"github.com/w1lam/mc-pacman/internal/core/paths"
+	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
 type App struct {
-	Paths *paths.Paths
-	Repo  manifest.Repository
+	View ux.View
 
 	Services *Services
+
+	Paths        *paths.Paths
+	PathsRepo    paths.PathsRepository
+	ManifestRepo manifest.Repo
 }
 
 // New creates a new App initializing core of app
-func New() (*App, error) {
-	// Resolve paths
-	p, err := paths.Resolve()
+func New(view ux.View) (*App, error) {
+	pRepo := paths.NewPathRepo()
+
+	p, err := pRepo.Init()
 	if err != nil {
 		return nil, err
 	}
@@ -34,19 +39,22 @@ func New() (*App, error) {
 	}
 
 	// manifest repo
-	repo := manifest.NewFileRepository(p.ManifestPath)
+	mRepo := manifest.NewFileRepository(p.ManifestPath)
 
 	// manifest init
-	if err := repo.EnsureInitialized(); err != nil {
+	if err := mRepo.EnsureInitialized(); err != nil {
 		return nil, err
 	}
 
-	services := InitServices(p, repo)
+	s := initServices(p, mRepo, view)
 
 	return &App{
-		Repo:  repo,
-		Paths: p,
+		View: view,
 
-		Services: services,
+		Services: s,
+
+		Paths:        p,
+		PathsRepo:    pRepo,
+		ManifestRepo: mRepo,
 	}, nil
 }

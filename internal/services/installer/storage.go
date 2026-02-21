@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 )
 
-func (s *Service) installToStorage(
+func (s *Installer) installToStorage(
 	tempDir string,
 	finalDir string,
 ) error {
