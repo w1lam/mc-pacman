@@ -1,0 +1,17 @@
+version: "2"
+linters:
+  default: fast
+  disable:
+    - depguard
+    - godot
+
+output:
+  show-stats: false
+
+run:
+  timeout: 5m
+  issues-exit-code: 0
+  relative-path-mode: gomod
+  allow-parallel-runners: true
+  allow-serial-runners: true
+  concurrency: 4

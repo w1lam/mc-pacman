@@ -3,19 +3,19 @@
   "packages": [
     {
       "id": "freaky-franklin",
-      "type": 0
+      "pkgType": "modpack"
     },
     {
       "id": "freaky-franklin-serverside",
-      "type": 0
+      "pkgType": "modpack"
     },
     {
       "id": "cool-visuals",
-      "type": 0
+      "pkgType": "modpack"
     },
     {
       "id": "visual-enhance",
-      "type": 1
+      "pkgType": "resourcebundle"
     }
   ]
 }

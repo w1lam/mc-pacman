@@ -3,7 +3,7 @@ package tui
 
 import (
 	ansi "github.com/w1lam/Packages/tui"
-	"github.com/w1lam/mc-pacman/internal/events"
+	"github.com/w1lam/mc-pacman/internal/core/events"
 )
 
 type View struct {

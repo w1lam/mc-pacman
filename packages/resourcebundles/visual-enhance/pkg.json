@@ -6,13 +6,7 @@
   "loader": "",
   "env": "Client",
   "description": "Cool lil resourcepacks that spice up minecraft visuals",
-  "pkgType": {
-    "pkgType": 1,
-    "typeName": "resourcebundle",
-    "entryType": "resourcepack"
-  },
-  "listSource": "",
-  "hash": "",
+  "pkgType": "resourcepack",
   "entries": [
     {
       "ID": "connected-rocks",

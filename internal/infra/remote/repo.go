@@ -1,3 +1,4 @@
+// Package remote holds remote repo that handles fetching of remote packages from github
 package remote
 
 import (
@@ -11,25 +12,20 @@ import (
 )
 
 const (
+	// BaseURL is the base url to github repo for api calls
 	BaseURL = "https://api.github.com/repos/w1lam/mc-pacman/"
-	RawURL  = "https://raw.githubusercontent.com/w1lam/mc-pacman/refs/heads/main/"
+	// RawURL is the base url to github repo for raw file access
+	RawURL = "https://raw.githubusercontent.com/w1lam/mc-pacman/refs/heads/main/"
 )
 
+// RemoteRepository handles fetching remote packages from github
 type RemoteRepository struct {
 	baseURL string
 	rawURL  string
 	client  *http.Client
 
 	mu    sync.Mutex
-	cache *Catalogue
-}
-
-// NewCatalogue creates blank catalogue
-func NewCatalogue() *Catalogue {
-	return &Catalogue{
-		SchemaVersion: 1,
-		Packages:      []CataloguePackage{},
-	}
+	cache map[packages.PkgID]packages.RemotePackage
 }
 
 // New creates a new remote repository
@@ -41,61 +37,48 @@ func New() *RemoteRepository {
 			Timeout: time.Second * 30,
 		},
 
-		cache: NewCatalogue(),
+		cache: make(map[packages.PkgID]packages.RemotePackage),
 	}
 }
 
 // GetAll gets all available packages from catalogue
-func (r *RemoteRepository) GetAll(ctx context.Context) (packages.RemotePackageIndex, error) {
-	url := fmt.Sprintf("%spacakges/catalogue.json", r.rawURL)
+func (r *RemoteRepository) GetAll(ctx context.Context) (map[packages.PkgID]packages.RemotePackage, error) {
+	url := fmt.Sprintf("%scontents/packages", r.baseURL)
 
-	var cat Catalogue
-	err := r.githubJSONResp(ctx, url, &cat)
-	if err != nil {
+	var contents []githubContentResponse
+	if err := r.decodeRemoteJSON(ctx, url, &contents); err != nil {
 		return nil, err
 	}
 
-	out := packages.BlankRemotePackageIndex()
+	out := make(map[packages.PkgID]packages.RemotePackage)
 
-	for _, pkg := range cat.Packages {
-		pType := packages.PackageTypeIndex[pkg.Type]
+	for _, item := range contents {
+		if item.Type != "dir" {
+			continue
+		}
 
-		rURL := fmt.Sprintf("%spackages/%s/%s/pkg.json", r.rawURL, pType.StorageDir, pkg.ID)
+		pkgID := packages.PkgID(item.Name)
+		pkgURL := fmt.Sprintf("%spackages/%s/pkg.json", r.rawURL, item.Name)
 
 		var remotePkg packages.RemotePackage
-		err := r.githubJSONResp(ctx, rURL, &remotePkg)
-		if err != nil {
+		if err := r.decodeRemoteJSON(ctx, pkgURL, &remotePkg); err != nil {
 			return nil, err
 		}
 
-		out[pkg.Type][pkg.ID] = remotePkg
+		out[pkgID] = remotePkg
 	}
 
 	return out, nil
 }
 
+// GetByID gets a remote package by id
 func (r *RemoteRepository) GetByID(ctx context.Context, id packages.PkgID) (packages.RemotePackage, error) {
-	url := fmt.Sprintf("%spackages/catalogue.json", r.rawURL)
+	url := fmt.Sprintf("%spackages/%s/pkg.json", r.rawURL, id)
 
-	var cat Catalogue
-	err := r.githubJSONResp(ctx, url, &cat)
-	if err != nil {
+	var pkg packages.RemotePackage
+	if err := r.decodeRemoteJSON(ctx, url, &pkg); err != nil {
 		return packages.RemotePackage{}, err
 	}
 
-	for _, p := range cat.Packages {
-		if p.ID == id {
-			rURL := fmt.Sprintf("%spackages/%s/%s/pkg.json", r.rawURL, p.Type, p.ID)
-
-			var pkg packages.RemotePackage
-			err := r.githubJSONResp(ctx, rURL, &pkg)
-			if err != nil {
-				return packages.RemotePackage{}, err
-			}
-
-			return pkg, nil
-		}
-	}
-
-	return packages.RemotePackage{}, fmt.Errorf("failed to find specified package")
+	return pkg, nil
 }

@@ -6,13 +6,7 @@
   "loader": "fabric",
   "env": "Server",
   "description": "Server Side version of Freaky Franklin",
-  "pkgType": {
-    "pkgType": 0,
-    "typeName": "modpack",
-    "entryType": "mod"
-  },
-  "listSource": "",
-  "hash": "",
+  "pkgType": "modpack",
   "entries": [
     {
       "ID": "resourceful-config",

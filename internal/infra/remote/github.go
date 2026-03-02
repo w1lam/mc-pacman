@@ -16,7 +16,7 @@ type githubContentResponse struct {
 	Type   string `json:"type"`
 }
 
-func (r *RemoteRepository) githubJSONResp(ctx context.Context, url string, out any) error {
+func (r *RemoteRepository) decodeRemoteJSON(ctx context.Context, url string, out any) error {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return err

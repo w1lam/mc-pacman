@@ -5,9 +5,11 @@ import (
 	"strings"
 
 	ansi "github.com/w1lam/Packages/tui"
+	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/events"
 )
+
+// TODO: FIX LISTER RENDERERING TO WORK WITH NEW PACKAGES INDEX STRUCTURE
 
 type View struct {
 	ansi bool
@@ -58,8 +60,8 @@ func (v *View) Emit(event events.Event) {
 				fmt.Printf("\n\n %s Download Complete!                     \n", target)
 			}
 
-		// INSTALLER
-		case events.ScopeInstaller:
+		// GETTER
+		case events.ScopeGetter:
 			switch event.Type {
 			case events.EventStart:
 				fmt.Printf("\n[%s] installing %s...                                \n", scope, target)
@@ -77,26 +79,29 @@ func (v *View) Emit(event events.Event) {
 		case events.ScopeList:
 			switch event.Type {
 			case events.EventStart:
-				fmt.Println(event.Message)
+				fmt.Println("Fetching packages...")
+
 			case events.EventComplete:
 				index := event.ExtraData.(packages.RemotePackageIndex)
 				for pType, pkgs := range index {
-					fmt.Println()
-					fmt.Println(strings.ToUpper(packages.PackageTypeIndex[pType].TypeName) + "S:")
-					fmt.Println(strings.Repeat("-", len(packages.PackageTypeIndex[pType].TypeName)) + "---")
-					for _, pkg := range pkgs {
-						fmt.Println(" " + pkg.Name)
-						fmt.Println(" * ID:", pkg.ID)
-						fmt.Println(" - List Version:", pkg.ListVersion)
-						fmt.Println(" - Minecraft Version:", pkg.McVersion)
-						if pkg.Description != "" {
-							fmt.Println(" - Desctription:", pkg.Description)
-						}
-						fmt.Println(" - Env:", pkg.Env)
-						if pkg.Loader != "" {
-							fmt.Println(" - Loader:", pkg.Loader)
-						}
+					if len(pkgs) > 0 {
 						fmt.Println()
+						fmt.Println(strings.ToUpper(packages.PackageTypeIndex[pType].TypeName) + "S:")
+						fmt.Println(strings.Repeat("-", len(packages.PackageTypeIndex[pType].TypeName)) + "---")
+						for _, pkg := range pkgs {
+							fmt.Println(" " + pkg.Name)
+							fmt.Println(" * ID:", pkg.ID)
+							fmt.Println(" - List Version:", pkg.ListVersion)
+							fmt.Println(" - Minecraft Version:", pkg.McVersion)
+							if pkg.Description != "" {
+								fmt.Println(" - Desctription:", pkg.Description)
+							}
+							fmt.Println(" - Env:", pkg.Env)
+							if pkg.Loader != "" {
+								fmt.Println(" - Loader:", pkg.Loader)
+							}
+							fmt.Println()
+						}
 					}
 				}
 			}
@@ -129,36 +134,14 @@ func (v *View) Emit(event events.Event) {
 				fmt.Printf(" %s downloaded\n", target)
 			}
 
-		// INSTALLER
-		case events.ScopeInstaller:
+		// GETTER
+		case events.ScopeGetter:
 			switch event.Type {
 			case events.EventStart:
 				fmt.Printf("\n[%s] installing %s...                                \n", scope, target)
 			case events.EventComplete:
 				fmt.Printf("\n\n[%s] %s Installation Complete!                     \n", scope, target)
 			}
-		}
-	}
-}
-
-func CliPackageListRenderer(pkgIndex packages.RemotePackageIndex) {
-	for pType, pkgs := range pkgIndex {
-		fmt.Println()
-		fmt.Println(strings.ToUpper(packages.PackageTypeIndex[pType].TypeName) + "S:")
-		fmt.Println(strings.Repeat("-", len(packages.PackageTypeIndex[pType].TypeName)) + "---")
-		for _, pkg := range pkgs {
-			fmt.Println(" " + pkg.Name)
-			fmt.Println(" * ID:", pkg.ID)
-			fmt.Println(" - List Version:", pkg.ListVersion)
-			fmt.Println(" - Minecraft Version:", pkg.McVersion)
-			if pkg.Description != "" {
-				fmt.Println(" - Desctription:", pkg.Description)
-			}
-			fmt.Println(" - Env:", pkg.Env)
-			if pkg.Loader != "" {
-				fmt.Println(" - Loader:", pkg.Loader)
-			}
-			fmt.Println()
 		}
 	}
 }
