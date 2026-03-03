@@ -39,26 +39,20 @@ func buildInstalledPackage(downloaded DownloadedPackage, hash string) (packages.
 	}
 
 	return packages.InstalledPackage{
-		Name:             downloaded.Resolved.Remote.Name,
-		ID:               downloaded.Resolved.Remote.ID,
-		InstalledVersion: downloaded.Resolved.Remote.ListVersion,
-		McVersion:        downloaded.Resolved.Remote.McVersion,
-		Loader:           downloaded.Resolved.Remote.Loader,
-		Type:             downloaded.Resolved.Remote.Type,
-		ListSource:       downloaded.Resolved.Remote.ListSource,
-		Hash:             hash,
-		Entries:          entries,
+		PackageBase: downloaded.Resolved.Remote.PackageBase,
+		Hash:        hash,
+		Entries:     entries,
 	}, nil
 }
 
 // buildInstalledPackageEntry builds an installed package entry from downloader results
 func buildInstalledPackageEntry(resolved resolver.ResolvedFile, result downloader.FileResult) packages.InstalledPackageEntry {
 	return packages.InstalledPackageEntry{
-		ID:               resolved.ID,
-		InstalledVersion: resolved.Version,
-		FileName:         result.FileName,
-		Hash:             result.Hash,
-		Algo:             "sha512",
+		ID:       resolved.ID,
+		Version:  resolved.Version,
+		FileName: result.FileName,
+		Hash:     result.Hash,
+		Algo:     "sha512",
 	}
 }
 

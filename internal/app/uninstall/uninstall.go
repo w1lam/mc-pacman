@@ -1,7 +1,9 @@
 package uninstall
 
-import "github.com/w1lam/mc-pacman/internal/app/base"
+import "github.com/w1lam/mc-pacman/internal/core/events"
+
+// TODO: IMPLEMENT UNINSTALLER
 
 type Uninstaller struct {
-	Base base.UseCase
+	events.EmitterBase
 }

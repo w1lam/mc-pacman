@@ -12,26 +12,34 @@ import (
 	"github.com/w1lam/Packages/modrinth"
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/infra/base"
+	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
 // Resolver handles resolving remote packages
 type Resolver struct {
-	base.Service
+	events.EmitterBase
 	modClient *modrinth.Client
 }
 
 // New creates a new resolver
-func New(agent string) *Resolver {
+func New(view ux.View, agent string) *Resolver {
 	cfg := modrinth.Config{
 		BaseURL: "",
 		Agent:   agent,
 		HTTP:    nil,
 	}
+
 	c := modrinth.NewClient(cfg)
-	return &Resolver{
+
+	r := Resolver{
+		EmitterBase: events.EmitterBase{
+			Scope: events.ScopeResolver,
+		},
 		modClient: c,
 	}
+
+	r.SetEmitter(view)
+	return &r
 }
 
 type ResolvedPackage struct {
@@ -53,8 +61,13 @@ type ResolvedFile struct {
 // Resolve resolves a remote package to a slice of downloader.FileRequest ready for download
 func (r *Resolver) Resolve(
 	ctx context.Context,
+	parentOp events.Operation,
 	pkg packages.RemotePackage,
 ) (ResolvedPackage, error) {
+	op := r.StartOp(parentOp, fmt.Sprintf("resolve %s", pkg.ID))
+	r.EmitStart(op, fmt.Sprintf("resolving package: %s", pkg.ID))
+	defer r.EmitEnd(op)
+
 	filter := modrinth.VersionFilter{
 		GameVersion: pkg.McVersion,
 		Loader:      pkg.Loader,

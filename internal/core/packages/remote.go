@@ -6,29 +6,28 @@ import (
 
 // RemotePackage is a resolved package that gets passed to the installer
 type RemotePackage struct {
-	Name string `json:"name"`
-	ID   PkgID  `json:"id"`
-
-	ListVersion string `json:"listVersion"`
-	McVersion   string `json:"mcVersion"`
-	Loader      string `json:"loader"`
-	Env         string `json:"env"`
-	Description string `json:"description"`
-
-	Type       PkgTypeID `json:"pkgType"`
-	ListSource string    `json:"-"`
+	PackageBase
 
 	Entries []RemoteEntry `json:"entries"`
 }
 
 // RemoteEntry is an entry in a remote package
 type RemoteEntry struct {
-	ID        EntryID `json:"id"`
-	PinnedVer string  `json:"pinnedVer"`
+	ID        EntryID     `json:"id"`
+	PinnedVer string      `json:"pinnedVer"`
+	Type      EntryTypeID `json:"type"`
+}
+
+func (p RemotePackage) GetBase() PackageBase {
+	return p.PackageBase
+}
+
+func (p RemotePackage) IsInstalled() bool {
+	return false
 }
 
 // RemoteRepo is the interface for fetching packages from remote sources (e.g. github)
 type RemoteRepo interface {
-	GetAll(ctx context.Context) (map[PkgID]RemotePackage, error)
+	GetAll(ctx context.Context) ([]RemotePackage, error)
 	GetByID(ctx context.Context, id PkgID) (RemotePackage, error)
 }

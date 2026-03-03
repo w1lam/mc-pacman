@@ -2,28 +2,26 @@
 package verifier
 
 import (
-	"github.com/w1lam/mc-pacman/internal/app/base"
 	"github.com/w1lam/mc-pacman/internal/core/events"
-	"github.com/w1lam/mc-pacman/internal/core/state"
+	"github.com/w1lam/mc-pacman/internal/core/packages"
 	"github.com/w1lam/mc-pacman/internal/infra/paths"
 )
 
 // TODO: REFACTOR VERIFIER
 
 type Verifier struct {
-	base.UseCase
-	paths *paths.Paths
-	repo  state.Repo
+	events.EmitterBase
+	paths         *paths.Paths
+	installedRepo packages.InstalledRepo
 }
 
-func New(p *paths.Paths, r state.Repo) *Verifier {
+func New(p *paths.Paths, iRepo packages.InstalledRepo) *Verifier {
 	return &Verifier{
-		UseCase: base.UseCase{
-			Scope:   events.ScopeVerifier,
-			Emitter: nil,
+		EmitterBase: events.EmitterBase{
+			Scope: events.ScopeVerifier,
 		},
-		paths: p,
-		repo:  r,
+		paths:         p,
+		installedRepo: iRepo,
 	}
 }
 

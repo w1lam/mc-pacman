@@ -118,7 +118,7 @@ func (r *stateRepo) saveToDisk(m *State) error {
 	return os.Rename(tmp, r.path)
 }
 
-// Ensureensures the manifest is initialized
+// Ensureensures the state is initialized
 func (r *stateRepo) Ensure() error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -133,11 +133,10 @@ func (r *stateRepo) Ensure() error {
 	}
 
 	s := &State{
-		SchemaVersion:       1,
-		EnabledPackageIDs:   make(map[packages.PkgTypeID]packages.PkgID),
-		InstalledPackageIDs: []packages.PkgID{},
-		InstalledLoaders:    []LoaderInfo{},
-		Backups:             []BackupEntry{},
+		SchemaVersion:     1,
+		EnabledPackageIDs: make(map[packages.PkgTypeID]packages.PkgID),
+		InstalledLoaders:  []LoaderInfo{},
+		Backups:           []BackupEntry{},
 	}
 
 	return r.saveToDisk(s)

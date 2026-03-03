@@ -2,29 +2,30 @@ package packages
 
 // InstalledPackage is an installed package which holds all information about the package
 type InstalledPackage struct {
-	Name             string `json:"name"`
-	ID               PkgID  `json:"id"`
-	InstalledVersion string `json:"version"`
-	McVersion        string `json:"mcVersion"`
-	Loader           string `json:"loader"`
+	PackageBase
 
-	Type PkgTypeID `json:"pkgType"`
-
-	ListSource string                            `json:"listSource"`
-	Hash       string                            `json:"hash"`
-	Entries    map[EntryID]InstalledPackageEntry `json:"installedEntries"`
+	Hash    string                            `json:"hash"`
+	Entries map[EntryID]InstalledPackageEntry `json:"installedEntries"`
 
 	HasConfig bool `json:"hasConfig,omitempty"`
 }
 
 // InstalledPackageEntry is a mod entry in the manifest that holds all information about an entry
 type InstalledPackageEntry struct {
-	ID               EntryID `json:"id"` // id or slug
-	InstalledVersion string  `json:"InstalledVersion"`
+	ID      EntryID `json:"id"` // id or slug
+	Version string  `json:"version"`
 
 	FileName string `json:"fileName"`
 	Hash     string `json:"hash"`
 	Algo     string `json:"hashAlgo"`
+}
+
+func (p InstalledPackage) GetBase() PackageBase {
+	return p.PackageBase
+}
+
+func (p InstalledPackage) IsInstalled() bool {
+	return false
 }
 
 type InstalledRepo interface {

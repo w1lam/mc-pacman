@@ -9,12 +9,11 @@ import (
 
 // State is the global state of the program
 type State struct {
-	SchemaVersion       int                                   `json:"schemaVersion"`
-	McDir               string                                `json:"mcDir"`
-	EnabledPackageIDs   map[packages.PkgTypeID]packages.PkgID `json:"enabledPackages"`
-	InstalledPackageIDs []packages.PkgID                      `json:"installedPackages"`
-	InstalledLoaders    []LoaderInfo                          `json:"installedLoader"`
-	Backups             []BackupEntry                         `json:"backups"`
+	SchemaVersion     int                                   `json:"schemaVersion"`
+	McDir             string                                `json:"mcDir"`
+	EnabledPackageIDs map[packages.PkgTypeID]packages.PkgID `json:"enabledPackages"`
+	InstalledLoaders  []LoaderInfo                          `json:"installedLoader"`
+	Backups           []BackupEntry                         `json:"backups"`
 }
 
 // BackupEntry asda

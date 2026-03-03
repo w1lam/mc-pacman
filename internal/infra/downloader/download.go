@@ -14,27 +14,28 @@ import (
 	"time"
 
 	"github.com/w1lam/mc-pacman/internal/core/events"
-	"github.com/w1lam/mc-pacman/internal/infra/base"
+	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
 // Downloader is the downloader service
 type Downloader struct {
-	base.Service
+	events.EmitterBase
 	client      *http.Client
 	maxParallel int
 }
 
-func New() *Downloader {
-	return &Downloader{
-		Service: base.Service{
-			Scope:   events.ScopeDownloader,
-			Emitter: nil,
+func New(view ux.View) *Downloader {
+	d := Downloader{
+		EmitterBase: events.EmitterBase{
+			Scope: events.ScopeDownloader,
 		},
 		client: &http.Client{
 			Timeout: 30 * time.Second,
 		},
 		maxParallel: 5,
 	}
+	d.SetEmitter(view)
+	return &d
 }
 
 type FileRequest struct {
@@ -51,26 +52,23 @@ type FileResult struct {
 	Hash     string
 }
 
-func (s *Downloader) Download(
+func (d *Downloader) Download(
 	ctx context.Context,
 	destDir string,
+	parentOp events.Operation,
 	files []FileRequest,
 ) ([]FileResult, error) {
 	var (
 		wg      sync.WaitGroup
 		mu      sync.Mutex
 		results []FileResult
-		sem     = make(chan struct{}, s.maxParallel)
+		sem     = make(chan struct{}, d.maxParallel)
 		errCh   = make(chan error, 1)
 	)
 
-	op := events.NewOperation(s.Scope, destDir)
-
-	s.Emit(events.Event{
-		Type:    events.EventStart,
-		Op:      op,
-		Message: fmt.Sprintf("[%s] starting download", s.Scope),
-	})
+	op := d.StartOp(parentOp, fmt.Sprintf("download to %s", destDir))
+	d.EmitStart(op, fmt.Sprintf("starting download to %s", destDir))
+	defer d.EmitEnd(op)
 
 	for _, file := range files {
 		file := file
@@ -86,22 +84,8 @@ func (s *Downloader) Download(
 			}
 			defer func() { <-sem }()
 
-			s.Emit(events.Event{
-				Type:       events.EventUpdate,
-				Op:         op,
-				FileName:   file.FileName,
-				Percentage: 0,
-			})
-
-			res, err := s.downloadOne(ctx, op, destDir, file)
+			res, err := d.downloadOne(ctx, op, destDir, file)
 			if err != nil {
-				s.Emit(events.Event{
-					Type:     events.EventFailure,
-					Op:       op,
-					FileName: file.FileName,
-					Error:    err,
-				})
-
 				select {
 				case errCh <- err:
 				default:
@@ -112,13 +96,6 @@ func (s *Downloader) Download(
 			mu.Lock()
 			results = append(results, res)
 			mu.Unlock()
-
-			s.Emit(events.Event{
-				Type:       events.EventSuccess,
-				Op:         op,
-				FileName:   file.FileName,
-				Percentage: 100,
-			})
 		}()
 	}
 
@@ -130,28 +107,27 @@ func (s *Downloader) Download(
 	default:
 	}
 
-	s.Emit(events.Event{
-		Type:       events.EventComplete,
-		Op:         op,
-		FileName:   destDir,
-		Percentage: 100,
-	})
+	d.EmitComplete(op, fmt.Sprintf("download to %s complete", destDir))
 
 	return results, nil
 }
 
-func (s *Downloader) downloadOne(
+func (d *Downloader) downloadOne(
 	ctx context.Context,
-	op events.Operation,
+	parentOp events.Operation,
 	destDir string,
 	file FileRequest,
 ) (FileResult, error) {
+	op := d.StartOp(parentOp, fmt.Sprintf("download %s", file.FileName))
+	d.EmitStart(op, fmt.Sprintf("starting download: %s", file.FileName))
+	defer d.EmitEnd(op)
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, file.URL, nil)
 	if err != nil {
 		return FileResult{}, err
 	}
 
-	resp, err := s.client.Do(req)
+	resp, err := d.client.Do(req)
 	if err != nil {
 		return FileResult{}, nil
 	}
@@ -182,12 +158,11 @@ func (s *Downloader) downloadOne(
 			}
 
 			downloaded += int64(n)
-			s.Emit(events.Event{
+			d.Emit(events.Event{
 				Type:       events.EventUpdate,
 				Op:         op,
 				FileName:   file.FileName,
 				Percentage: float64(downloaded) / float64(file.Size) * 100,
-				Message:    "downloading",
 			})
 		}
 
@@ -206,18 +181,11 @@ func (s *Downloader) downloadOne(
 	computed := hex.EncodeToString(hasher.Sum(nil))
 
 	if file.Hash != "" && computed != file.Hash {
-		s.Emit(events.Event{
-			Type:    events.EventFailure,
-			Message: fmt.Sprintf("[%s] hash mismath for %s", s.Scope, file.ID),
-			Error:   fmt.Errorf("hash mismatch for %s", file.ID),
-		})
+		d.EmitError(op, fmt.Errorf("hash mismath for %s", file.ID))
 		return FileResult{}, fmt.Errorf("hash mismatch for %s", file.ID)
 	}
 
-	s.Emit(events.Event{
-		Type: events.EventComplete,
-		Op:   op,
-	})
+	d.EmitComplete(op, fmt.Sprintf("download complete: %s", file.FileName))
 
 	return FileResult{
 		ID:       file.ID,

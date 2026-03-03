@@ -1,12 +1,13 @@
+// Package app holds the App struct
 package app
 
 import (
+	"github.com/w1lam/mc-pacman/internal/app/activation"
 	"github.com/w1lam/mc-pacman/internal/app/getter"
 	"github.com/w1lam/mc-pacman/internal/app/installer"
 	"github.com/w1lam/mc-pacman/internal/app/lister"
 	"github.com/w1lam/mc-pacman/internal/app/updater"
 	"github.com/w1lam/mc-pacman/internal/app/verifier"
-	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
 	"github.com/w1lam/mc-pacman/internal/core/state"
 	"github.com/w1lam/mc-pacman/internal/infra/downloader"
@@ -18,13 +19,11 @@ import (
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
-// TODO: CLEAN UPP APP NEW, MAKE SURE EVERYTHING FLOWS DOWNWARDS AND NO DUPLICATES
-
 // App is the main struct of application holding all core services and state
 type App struct {
 	view ux.View
 
-	UseCases *useCases
+	*useCases
 
 	paths *paths.Paths
 
@@ -81,7 +80,7 @@ func New(view ux.View, cfg Config) (*App, error) {
 	return &App{
 		view: view,
 
-		UseCases: uc,
+		useCases: uc,
 
 		paths:     p,
 		stateRepo: sRepo,
@@ -98,6 +97,7 @@ type useCases struct {
 	Updater   *updater.Updater
 	Verifier  *verifier.Verifier
 	Lister    *lister.Lister
+	Activator *activation.Activator
 }
 
 // initUseCases initializes all use cases with their dependencies and returns a useCases struct
@@ -106,31 +106,30 @@ func initUseCases(
 	sRepo state.Repo,
 	iRepo packages.InstalledRepo,
 	rRepo packages.RemoteRepo,
-	view events.Emitter,
+	view ux.View,
 ) *useCases {
-	l := lister.New(p, sRepo)
-	l.SetEmitter(view)
+	a := activation.New(view, iRepo, p)
 
-	d := downloader.New()
-	d.SetEmitter(view)
+	r := resolver.New(view, UserAgent())
 
-	r := resolver.New(UserAgent())
-	r.SetEmitter(view)
+	d := downloader.New(view)
 
-	g := getter.New(p, iRepo, d, r)
-	g.SetEmitter(view)
+	l := lister.New(view, iRepo, rRepo)
 
-	v := verifier.New(p, sRepo)
-	v.SetEmitter(view)
+	g := getter.New(view, p, iRepo, d, r)
 
-	i := installer.New(p, sRepo, g)
-	i.SetEmitter(view)
+	v := verifier.New(p, iRepo)
+
+	i := installer.New(view, p, sRepo, g)
+
+	u := updater.New(view, iRepo, rRepo)
 
 	return &useCases{
 		Installer: i,
 		Getter:    g,
-		Updater:   nil,
+		Updater:   u,
 		Verifier:  v,
 		Lister:    l,
+		Activator: a,
 	}
 }

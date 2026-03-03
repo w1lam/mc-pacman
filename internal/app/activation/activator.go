@@ -2,42 +2,35 @@
 package activation
 
 import (
-	"github.com/w1lam/mc-pacman/internal/app/base"
-	"github.com/w1lam/mc-pacman/internal/core/state"
+	"github.com/w1lam/mc-pacman/internal/core/events"
+	"github.com/w1lam/mc-pacman/internal/core/packages"
 	"github.com/w1lam/mc-pacman/internal/infra/paths"
+	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
+// TODO: IMPLEMENT ACTIVATOR IE ENABLE/DISABLE
+
 type Activator struct {
-	base.UseCase
+	events.EmitterBase
 	paths *paths.Paths
-	repo  state.Repo
+	iRepo packages.InstalledRepo
 }
 
-func New(repo state.Repo, paths *paths.Paths) *Activator {
-	return &Activator{
+func New(view ux.View, iRepo packages.InstalledRepo, paths *paths.Paths) *Activator {
+	a := Activator{
 		paths: paths,
-		repo:  repo,
+		iRepo: iRepo,
 	}
+	a.SetEmitter(view)
+	return &a
 }
 
 // Enable enables the specified package
 func (a *Activator) Enable(pkgID string) error {
-	m, err := a.repo.Load()
-	if err != nil {
-		return err
-	}
-
-	_ = m
 	return nil
 }
 
 // Disable disables a package of specified package type. packages types "modpack", "resourcebundle", "shaderbundle"
 func (a *Activator) Disable(pkgType string) error {
-	m, err := a.repo.Load()
-	if err != nil {
-		return err
-	}
-
-	_ = m
 	return nil
 }

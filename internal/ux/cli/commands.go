@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/w1lam/mc-pacman/internal/app"
+	"github.com/w1lam/mc-pacman/internal/core/events"
 )
 
 func getApp(cmd *cobra.Command) *app.App {
@@ -19,11 +20,23 @@ func getApp(cmd *cobra.Command) *app.App {
 func newListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
-		Short: "List available packages",
+		Short: "List installed packages",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			a := getApp(cmd)
 
-			return a.UseCases.Lister.ListAllRemote(cmd.Context())
+			return a.Lister.ListAll(cmd.Context())
+		},
+	}
+}
+
+func newSearchCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "search",
+		Short: "search for available packages",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			a := getApp(cmd)
+
+			return a.Lister.SearchAll(cmd.Context())
 		},
 	}
 }
@@ -48,7 +61,7 @@ func newGetCmd() *cobra.Command {
 			id := args[0]
 			a := getApp(cmd)
 
-			return a.UseCases.Getter.Get(cmd.Context(), id)
+			return a.Getter.Get(cmd.Context(), events.Operation{}, id)
 		},
 	}
 }
@@ -62,13 +75,11 @@ func newInstallCmd() *cobra.Command {
 			id := args[0]
 			a := getApp(cmd)
 
-			return a.UseCases.Installer.Install(cmd.Context(), id)
+			return a.Installer.Install(cmd.Context(), id)
 		},
 	}
 }
 
-// TODO: IMPLEMENT UPDATE LOGIC
-// newUpdateCmd PLACEHOLDER COMMAND
 func newUpdateCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "update [package-id]",
@@ -84,7 +95,6 @@ func newUpdateCmd() *cobra.Command {
 	}
 }
 
-// TODO: IMPLEMENT UPGRADE LOGIC
 func newUpgradeCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "upgrade [package-id]",

@@ -22,7 +22,7 @@ func newRootCmd() *cobra.Command {
 				McDir: mcDir,
 			}
 
-			view := New()
+			view := NewCLIView()
 			a, err := app.New(view, cfg)
 			if err != nil {
 				return err
@@ -43,6 +43,7 @@ func newRootCmd() *cobra.Command {
 
 	cmd.AddCommand(newGetCmd())
 	cmd.AddCommand(newListCmd())
+	cmd.AddCommand(newSearchCmd())
 	cmd.AddCommand(newVerifyCmd())
 	cmd.AddCommand(newInstallCmd())
 	cmd.AddCommand(newUpdateCmd())

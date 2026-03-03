@@ -1,820 +1,820 @@
 {
   "name": "Freaky Franklin",
   "id": "freaky-franklin",
+  "type": "modpack",
   "listVersion": "0.2.3",
   "mcVersion": "1.21.10",
   "loader": "fabric",
   "env": "Client and Server",
   "description": "Mod Pack for Freaky Franklin server that mainly adds visual and small immersion and building mods.",
-  "pkgType": "modpack",
   "entries": [
     {
-      "ID": "notenoughcrashes",
+      "id": "notenoughcrashes",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "resourceful-config",
+      "id": "resourceful-config",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "some-more-blocks",
+      "id": "some-more-blocks",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "enderscape",
+      "id": "enderscape",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "underground-worlds",
+      "id": "underground-worlds",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "better-archeology",
+      "id": "better-archeology",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "controlify",
+      "id": "controlify",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "xaeros-maps-x-waystones",
+      "id": "xaeros-maps-x-waystones",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "waystones",
+      "id": "waystones",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "rustic-delight",
+      "id": "rustic-delight",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "xaeros-minimap",
+      "id": "xaeros-minimap",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-roofs",
+      "id": "macaws-roofs",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "particle-core",
+      "id": "particle-core",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "spawn-animations-compats",
+      "id": "spawn-animations-compats",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "gputape",
+      "id": "gputape",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "rsls",
+      "id": "rsls",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "debugify",
+      "id": "debugify",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "packet-fixer",
+      "id": "packet-fixer",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "attributefix",
+      "id": "attributefix",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "modelfix",
+      "id": "modelfix",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "no-resource-pack-warnings",
+      "id": "no-resource-pack-warnings",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "yeetus-experimentus",
+      "id": "yeetus-experimentus",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "current-game-music-track",
+      "id": "current-game-music-track",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "minecraft-cursor",
+      "id": "minecraft-cursor",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cubes-without-borders",
+      "id": "cubes-without-borders",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "dark-loading-screen",
+      "id": "dark-loading-screen",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "appleskin",
+      "id": "appleskin",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "zoomify",
+      "id": "zoomify",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "xaeros-world-map",
+      "id": "xaeros-world-map",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "ping-wheel",
+      "id": "ping-wheel",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "invmove",
+      "id": "invmove",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "inventory-management",
+      "id": "inventory-management",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "resourcify",
+      "id": "resourcify",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "immersive-ui",
+      "id": "immersive-ui",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "modmenu",
+      "id": "modmenu",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "jade",
+      "id": "jade",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "reeses-sodium-options",
+      "id": "reeses-sodium-options",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "smooth-gui",
+      "id": "smooth-gui",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "dynamiccrosshair",
+      "id": "dynamiccrosshair",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "dynamiccrosshaircompat",
+      "id": "dynamiccrosshaircompat",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "immersive-hotbar",
+      "id": "immersive-hotbar",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "pick-up-notifier",
+      "id": "pick-up-notifier",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "emotecraft",
+      "id": "emotecraft",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "better-advancements",
+      "id": "better-advancements",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "fallingtree",
+      "id": "fallingtree",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "veinminer-enchantment",
+      "id": "veinminer-enchantment",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "veinminer",
+      "id": "veinminer",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cut-through",
+      "id": "cut-through",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "rechiseled",
+      "id": "rechiseled",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "diagonal-fences",
+      "id": "diagonal-fences",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "diagonal-walls",
+      "id": "diagonal-walls",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "diagonal-windows",
+      "id": "diagonal-windows",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "enchanted-vertical-slabs",
+      "id": "enchanted-vertical-slabs",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-bridges",
+      "id": "macaws-bridges",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-doors",
+      "id": "macaws-doors",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-fences-and-walls",
+      "id": "macaws-fences-and-walls",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-lights-and-lamps",
+      "id": "macaws-lights-and-lamps",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-stairs",
+      "id": "macaws-stairs",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-trapdoors",
+      "id": "macaws-trapdoors",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "macaws-windows",
+      "id": "macaws-windows",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "stoneworks",
+      "id": "stoneworks",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "beautify-refabricated",
+      "id": "beautify-refabricated",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "elytra-trims",
+      "id": "elytra-trims",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "immersive-ores",
+      "id": "immersive-ores",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "travelersbackpack",
+      "id": "travelersbackpack",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "do-a-barrel-roll",
+      "id": "do-a-barrel-roll",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "attributes",
+      "id": "attributes",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "skills",
+      "id": "skills",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "default-skill-trees",
+      "id": "default-skill-trees",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "hardcore-revival",
+      "id": "hardcore-revival",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "true-ending",
+      "id": "true-ending",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "toms-storage",
+      "id": "toms-storage",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "nether-chested",
+      "id": "nether-chested",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "crate-delight",
+      "id": "crate-delight",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "storage-delight",
+      "id": "storage-delight",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "farmers-delight-refabricated",
+      "id": "farmers-delight-refabricated",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "more-delight",
+      "id": "more-delight",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "magnum-torch",
+      "id": "magnum-torch",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "trading-post",
+      "id": "trading-post",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "transmog",
+      "id": "transmog",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "animal_feeding_trough",
+      "id": "animal_feeding_trough",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "silk",
+      "id": "silk",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "melody",
+      "id": "melody",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "fabric-api",
+      "id": "fabric-api",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cloth-config",
+      "id": "cloth-config",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "lithostitched",
+      "id": "lithostitched",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "fabric-language-kotlin",
+      "id": "fabric-language-kotlin",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "creativecore",
+      "id": "creativecore",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "collective",
+      "id": "collective",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "mru",
+      "id": "mru",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "yacl",
+      "id": "yacl",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "balm",
+      "id": "balm",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cicada",
+      "id": "cicada",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "player-animation-library",
+      "id": "player-animation-library",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "library-ferret",
+      "id": "library-ferret",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "puzzles-lib",
+      "id": "puzzles-lib",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "forge-config-api-port",
+      "id": "forge-config-api-port",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "octo-lib",
+      "id": "octo-lib",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "architectury-api",
+      "id": "architectury-api",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "glitchcore",
+      "id": "glitchcore",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "konkrete",
+      "id": "konkrete",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cardinal-components-api",
+      "id": "cardinal-components-api",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "moogs-structure-lib",
+      "id": "moogs-structure-lib",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "fzzy-config",
+      "id": "fzzy-config",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "malilib",
+      "id": "malilib",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "prickle",
+      "id": "prickle",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "supermartijn642s-core-lib",
+      "id": "supermartijn642s-core-lib",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "supermartijn642s-config-lib",
+      "id": "supermartijn642s-config-lib",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "sodium-extra",
+      "id": "sodium-extra",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "sodium",
+      "id": "sodium",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "sodium-shadowy-path-blocks",
+      "id": "sodium-shadowy-path-blocks",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "entityculling",
+      "id": "entityculling",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "lithium",
+      "id": "lithium",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "immediatelyfast",
+      "id": "immediatelyfast",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "badoptimizations",
+      "id": "badoptimizations",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "ferrite-core",
+      "id": "ferrite-core",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "c2me-fabric",
+      "id": "c2me-fabric",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "moreculling",
+      "id": "moreculling",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cull-leaves",
+      "id": "cull-leaves",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "scalablelux",
+      "id": "scalablelux",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "krypton",
+      "id": "krypton",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "dynamic-fps",
+      "id": "dynamic-fps",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "better-block-entities",
+      "id": "better-block-entities",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "clumps",
+      "id": "clumps",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "distanthorizons",
+      "id": "distanthorizons",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "terralith",
+      "id": "terralith",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "dungeons-and-taverns",
+      "id": "dungeons-and-taverns",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "better-village",
+      "id": "better-village",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "mes-moogs-end-structures",
+      "id": "mes-moogs-end-structures",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "incendium",
+      "id": "incendium",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "easy-anvils",
+      "id": "easy-anvils",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "easy-magic",
+      "id": "easy-magic",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "visual-workbench",
+      "id": "visual-workbench",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "lambdynamiclights",
+      "id": "lambdynamiclights",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "iris",
+      "id": "iris",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "visuality",
+      "id": "visuality",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "particular-reforged",
+      "id": "particular-reforged",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "fallingleaves",
+      "id": "fallingleaves",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "bettergrassify",
+      "id": "bettergrassify",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "ambient-environment",
+      "id": "ambient-environment",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "physicsmod",
+      "id": "physicsmod",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "not-enough-animations",
+      "id": "not-enough-animations",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "skyboxify",
+      "id": "skyboxify",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "entity-model-features",
+      "id": "entity-model-features",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "entitytexturefeatures",
+      "id": "entitytexturefeatures",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "optigui",
+      "id": "optigui",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "continuity",
+      "id": "continuity",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "fusion-connected-textures",
+      "id": "fusion-connected-textures",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "3dskinlayers",
+      "id": "3dskinlayers",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "serene-seasons",
+      "id": "serene-seasons",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "weaponmaster",
+      "id": "weaponmaster",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "spawn-animations",
+      "id": "spawn-animations",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "cameraoverhaul",
+      "id": "cameraoverhaul",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "subtle-effects",
+      "id": "subtle-effects",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "armor-3d",
+      "id": "armor-3d",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "explosive-enhancement",
+      "id": "explosive-enhancement",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "villager-names-serilum",
+      "id": "villager-names-serilum",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "hold-my-items",
+      "id": "hold-my-items",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "sound-physics-remastered",
+      "id": "sound-physics-remastered",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "sound",
+      "id": "sound",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "ambientsounds",
+      "id": "ambientsounds",
       "pinnedVer": "",
       "type": "mod"
     },
     {
-      "ID": "presence-footsteps",
+      "id": "presence-footsteps",
       "pinnedVer": "",
       "type": "mod"
     }

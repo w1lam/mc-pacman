@@ -2,11 +2,10 @@
 package events
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"time"
 )
 
+// EventType is the type of an event
 type EventType string
 
 const (
@@ -15,58 +14,42 @@ const (
 	EventSuccess  EventType = "success"
 	EventFailure  EventType = "failure"
 	EventComplete EventType = "complete"
+	EventEnd      EventType = "end"
+	EventError    EventType = "error"
+	EventInfo     EventType = "info"
 )
 
+// Scope is the scope of an operation
 type Scope string
 
 const (
-	ScopeDownloader        Scope = "downloader"
-	ScopeDownloaderPerFile Scope = "perFile"
-	ScopeGetter            Scope = "getter"
-	ScopeInstaller         Scope = "installer"
-	ScopeResolver          Scope = "resolver"
-	ScopeVerifier          Scope = "verifier"
-	ScopeBackup            Scope = "backup"
-	ScopeList              Scope = "list"
+	ScopeDownloader  Scope = "downloader"
+	ScopeGetter      Scope = "getter"
+	ScopeInstaller   Scope = "installer"
+	ScopeUninstaller Scope = "uninstaller"
+	ScopeUpdater     Scope = "updater"
+	ScopeResolver    Scope = "resolver"
+	ScopeVerifier    Scope = "verifier"
+	ScopeBackup      Scope = "backup"
+	ScopeList        Scope = "list"
 )
 
+// Event is an event payload emitted by services for ux to consume
 type Event struct {
 	Type     EventType
 	Op       Operation
 	SubScope string
 
-	Message  string
-	FileName string
+	Message string
 
+	FileName   string
 	Percentage float64
 	Bytes      int
 
-	ExtraData any
+	PackagePayload  PackagePayload
+	PackagePayloads []PackagePayload
 
-	Error     error
+	Error error
+
 	Timestamp time.Time
-}
-
-type Operation struct {
-	ID     string
-	Scope  Scope
-	Target string
-}
-
-func NewOperation(scope Scope, target string) Operation {
-	return Operation{
-		ID:     newOpID(),
-		Scope:  scope,
-		Target: target,
-	}
-}
-
-func newOpID() string {
-	b := make([]byte, 6)
-	_, _ = rand.Read(b)
-	return base64.RawURLEncoding.EncodeToString(b)
-}
-
-type Emitter interface {
-	Emit(Event)
 }

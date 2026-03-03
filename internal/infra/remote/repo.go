@@ -42,7 +42,7 @@ func New() *RemoteRepository {
 }
 
 // GetAll gets all available packages from catalogue
-func (r *RemoteRepository) GetAll(ctx context.Context) (map[packages.PkgID]packages.RemotePackage, error) {
+func (r *RemoteRepository) GetAll(ctx context.Context) ([]packages.RemotePackage, error) {
 	url := fmt.Sprintf("%scontents/packages", r.baseURL)
 
 	var contents []githubContentResponse
@@ -50,14 +50,13 @@ func (r *RemoteRepository) GetAll(ctx context.Context) (map[packages.PkgID]packa
 		return nil, err
 	}
 
-	out := make(map[packages.PkgID]packages.RemotePackage)
+	out := make([]packages.RemotePackage, 0, len(contents))
 
 	for _, item := range contents {
 		if item.Type != "dir" {
 			continue
 		}
 
-		pkgID := packages.PkgID(item.Name)
 		pkgURL := fmt.Sprintf("%spackages/%s/pkg.json", r.rawURL, item.Name)
 
 		var remotePkg packages.RemotePackage
@@ -65,7 +64,7 @@ func (r *RemoteRepository) GetAll(ctx context.Context) (map[packages.PkgID]packa
 			return nil, err
 		}
 
-		out[pkgID] = remotePkg
+		out = append(out, remotePkg)
 	}
 
 	return out, nil

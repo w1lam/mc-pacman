@@ -1,110 +1,110 @@
 {
   "name": "Visual Enhancements Bundle",
   "id": "visual-enhancements",
+  "type": "resourcepack",
   "listVersion": "0.0.1",
   "mcVersion": "1.21.11",
   "loader": "",
   "env": "Client",
   "description": "Cool lil resourcepacks that spice up minecraft visuals",
-  "pkgType": "resourcepack",
   "entries": [
     {
-      "ID": "connected-rocks",
+      "id": "connected-rocks",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "connected-bricks",
+      "id": "connected-bricks",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "connected-paths",
+      "id": "connected-paths",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "glowing-glints",
+      "id": "glowing-glints",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "animated-items",
+      "id": "animated-items",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "fresh-food",
+      "id": "fresh-food",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "tools-and-utils",
+      "id": "tools-and-utils",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "recolorful-containers-gui",
+      "id": "recolorful-containers-gui",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "eclectic-trove-legendary-tooltips",
+      "id": "eclectic-trove-legendary-tooltips",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "fancy-crops",
+      "id": "fancy-crops",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "simple-grass-flowers",
+      "id": "simple-grass-flowers",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "os-colorful-grasses",
+      "id": "os-colorful-grasses",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "better-sugar-cane",
+      "id": "better-sugar-cane",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "fresh-flower-pots",
+      "id": "fresh-flower-pots",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "better-busy-leaves",
+      "id": "better-busy-leaves",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "better-foliage",
+      "id": "better-foliage",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "fresh-animations",
+      "id": "fresh-animations",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "fresh-animations-extensions",
+      "id": "fresh-animations-extensions",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "fire-rekindled",
+      "id": "fire-rekindled",
       "pinnedVer": "",
       "type": "resourcepack"
     },
     {
-      "ID": "vvi",
+      "id": "vvi",
       "pinnedVer": "",
       "type": "resourcepack"
     }
