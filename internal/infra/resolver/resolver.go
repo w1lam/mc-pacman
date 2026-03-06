@@ -42,9 +42,15 @@ func New(view ux.View, agent string) *Resolver {
 	return &r
 }
 
+type ResolutionFailure struct {
+	EntryID packages.EntryID
+	Err     error
+}
+
 type ResolvedPackage struct {
-	Remote packages.RemotePackage
-	Files  []ResolvedFile
+	Remote   packages.RemotePackage
+	Files    []ResolvedFile
+	Failures []ResolutionFailure
 }
 
 // ResolvedFile is a file that has been resolved and is ready for download
@@ -61,10 +67,10 @@ type ResolvedFile struct {
 // Resolve resolves a remote package to a slice of downloader.FileRequest ready for download
 func (r *Resolver) Resolve(
 	ctx context.Context,
-	parentOp events.Operation,
 	pkg packages.RemotePackage,
 ) (ResolvedPackage, error) {
-	op := r.StartOp(parentOp, fmt.Sprintf("resolve %s", pkg.ID))
+	pOp, _ := events.OpFromCtx(ctx)
+	op := r.StartOp(pOp, fmt.Sprintf("resolve_package_%s", pkg.ID))
 	r.EmitStart(op, fmt.Sprintf("resolving package: %s", pkg.ID))
 	defer r.EmitEnd(op)
 
@@ -77,6 +83,7 @@ func (r *Resolver) Resolve(
 	sem := make(chan struct{}, 5)
 
 	files := make([]ResolvedFile, 0, len(pkg.Entries))
+	failures := make([]ResolutionFailure, 0, len(pkg.Entries))
 	var mu sync.Mutex
 
 	total := len(pkg.Entries)
@@ -87,14 +94,17 @@ func (r *Resolver) Resolve(
 		entry := entry
 
 		g.Go(func() error {
+			cOp := r.StartOp(op, fmt.Sprintf("resolving_%s_%s", entry.Type, entry.ID))
+			r.EmitStart(cOp, "")
+			defer r.EmitEnd(cOp)
+
 			select {
 			case sem <- struct{}{}:
 			case <-ctx.Done():
+				r.EmitError(cOp, fmt.Errorf("cancelled: %w", ctx.Err()))
 				return ctx.Err()
 			}
 			defer func() { <-sem }()
-
-			r.Emit(events.Event{})
 
 			version, err := r.modClient.ResolveBestVersion(
 				ctx,
@@ -103,12 +113,29 @@ func (r *Resolver) Resolve(
 				filter,
 			)
 			if err != nil {
+				r.EmitError(cOp, err)
 				return err
 			}
 
 			if version == nil {
-				err := fmt.Errorf("no matching version for %s", entry.ID)
-				return err
+				fallbackFilter := modrinth.VersionFilter{Loader: filter.Loader}
+				version, err = r.modClient.ResolveBestVersion(ctx, string(entry.ID), entry.PinnedVer, fallbackFilter)
+				if err != nil {
+					r.EmitError(cOp, err)
+					return err
+				}
+
+				if version == nil {
+					mu.Lock()
+					failures = append(failures, ResolutionFailure{
+						EntryID: entry.ID,
+						Err:     fmt.Errorf("no_matching_version_for_%s", entry.ID),
+					})
+					mu.Unlock()
+					r.EmitError(cOp, failures[len(failures)-1].Err)
+					return nil
+				}
+				r.EmitInfo(cOp, fmt.Sprintf("fallback_version_%s_used_for_%s", version.VersionNumber, entry.ID))
 			}
 
 			var primary *modrinth.File
@@ -134,9 +161,10 @@ func (r *Resolver) Resolve(
 			mu.Unlock()
 
 			newCompleted := atomic.AddInt32(&completed, 1)
-			r.Emit(events.Event{})
 
 			_ = newCompleted
+
+			r.EmitComplete(cOp, fmt.Sprintf("version_%s_found_for_%s", version.VersionNumber, entry.ID))
 
 			return nil
 		})
@@ -146,8 +174,11 @@ func (r *Resolver) Resolve(
 		return ResolvedPackage{}, err
 	}
 
+	r.EmitComplete(op, fmt.Sprintf("version_found_for_%d/%d_entries", completed, len(pkg.Entries)))
+
 	return ResolvedPackage{
-		Remote: pkg,
-		Files:  files,
+		Remote:   pkg,
+		Files:    files,
+		Failures: failures,
 	}, nil
 }

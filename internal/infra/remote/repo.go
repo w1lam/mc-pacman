@@ -8,7 +8,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
+	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
 const (
@@ -18,8 +20,9 @@ const (
 	RawURL = "https://raw.githubusercontent.com/w1lam/mc-pacman/refs/heads/main/"
 )
 
-// RemoteRepository handles fetching remote packages from github
-type RemoteRepository struct {
+// repo handles fetching remote packages from github
+type repo struct {
+	events.EmitterBase
 	baseURL string
 	rawURL  string
 	client  *http.Client
@@ -29,8 +32,11 @@ type RemoteRepository struct {
 }
 
 // New creates a new remote repository
-func New() *RemoteRepository {
-	return &RemoteRepository{
+func New(view ux.View) *repo {
+	r := repo{
+		EmitterBase: events.EmitterBase{
+			Scope: events.ScopeRemoteRepo,
+		},
 		baseURL: BaseURL,
 		rawURL:  RawURL,
 		client: &http.Client{
@@ -39,10 +45,18 @@ func New() *RemoteRepository {
 
 		cache: make(map[packages.PkgID]packages.RemotePackage),
 	}
+	r.SetEmitter(view)
+
+	return &r
 }
 
-// GetAll gets all available packages from catalogue
-func (r *RemoteRepository) GetAll(ctx context.Context) ([]packages.RemotePackage, error) {
+// GetAll gets all available packages from github
+func (r *repo) GetAll(ctx context.Context) ([]packages.RemotePackage, error) {
+	parentOp, _ := events.OpFromCtx(ctx)
+	op := r.StartOp(parentOp, "get_remote_packages")
+	r.EmitStart(op, "")
+	defer r.EmitEnd(op)
+
 	url := fmt.Sprintf("%scontents/packages", r.baseURL)
 
 	var contents []githubContentResponse
@@ -71,8 +85,13 @@ func (r *RemoteRepository) GetAll(ctx context.Context) ([]packages.RemotePackage
 }
 
 // GetByID gets a remote package by id
-func (r *RemoteRepository) GetByID(ctx context.Context, id packages.PkgID) (packages.RemotePackage, error) {
-	url := fmt.Sprintf("%spackages/%s/pkg.json", r.rawURL, id)
+func (r *repo) GetByID(ctx context.Context, pkgID packages.PkgID) (packages.RemotePackage, error) {
+	parentOp, _ := events.OpFromCtx(ctx)
+	op := r.StartOp(parentOp, fmt.Sprintf("get_remote_%s", pkgID))
+	r.EmitStart(op, "")
+	defer r.EmitEnd(op)
+
+	url := fmt.Sprintf("%spackages/%s/pkg.json", r.rawURL, pkgID)
 
 	var pkg packages.RemotePackage
 	if err := r.decodeRemoteJSON(ctx, url, &pkg); err != nil {

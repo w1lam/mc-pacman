@@ -5,7 +5,6 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/w1lam/mc-pacman/internal/app"
-	"github.com/w1lam/mc-pacman/internal/core/events"
 )
 
 func getApp(cmd *cobra.Command) *app.App {
@@ -61,7 +60,7 @@ func newGetCmd() *cobra.Command {
 			id := args[0]
 			a := getApp(cmd)
 
-			return a.Getter.Get(cmd.Context(), events.Operation{}, id)
+			return a.Getter.Get(cmd.Context(), id)
 		},
 	}
 }

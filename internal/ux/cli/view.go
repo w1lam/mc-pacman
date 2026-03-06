@@ -7,17 +7,17 @@ import (
 
 // TODO: FIX LISTER RENDERERING TO WORK WITH NEW PACKAGES INDEX STRUCTURE
 
-type View struct {
+type CLIView struct {
 	ansi bool
 }
 
-func NewCLIView() *View {
-	return &View{
+func NewCLIView() *CLIView {
+	return &CLIView{
 		ansi: ansi.SupportsANSI(),
 	}
 }
 
-func (v *View) Emit(e events.Event) {
+func (v *CLIView) Emit(e events.Event) {
 	switch e.Op.Scope {
 	case events.ScopeDownloader:
 		downloaderRenderer(e, v.ansi)

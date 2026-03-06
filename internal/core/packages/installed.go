@@ -1,5 +1,7 @@
 package packages
 
+import "context"
+
 // InstalledPackage is an installed package which holds all information about the package
 type InstalledPackage struct {
 	PackageBase
@@ -33,9 +35,9 @@ type InstalledRepo interface {
 	Exists(PkgID) (bool, error)
 
 	// GetAll gets all installed packages
-	GetAll() ([]InstalledPackage, error)
+	GetAll(context.Context) ([]InstalledPackage, error)
 	// GetByID gets an installed package with given PkgID
-	GetByID(PkgID) (InstalledPackage, error)
+	GetByID(context.Context, PkgID) (InstalledPackage, error)
 
 	// Add creates package dir, moves entries to entries folder and writes pkg.json
 	Add(p InstalledPackage, entriesSrcDir string) error

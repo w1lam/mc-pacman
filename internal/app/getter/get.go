@@ -12,7 +12,6 @@ import (
 	"github.com/w1lam/mc-pacman/internal/infra/downloader"
 	"github.com/w1lam/mc-pacman/internal/infra/filesystem"
 	"github.com/w1lam/mc-pacman/internal/infra/paths"
-	"github.com/w1lam/mc-pacman/internal/infra/remote"
 	"github.com/w1lam/mc-pacman/internal/infra/resolver"
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
@@ -30,7 +29,7 @@ type Getter struct {
 }
 
 // New creates a new getter useCase
-func New(view ux.View, p *paths.Paths, iRepo packages.InstalledRepo, d *downloader.Downloader, r *resolver.Resolver) *Getter {
+func New(view ux.View, p *paths.Paths, iRepo packages.InstalledRepo, rRepo packages.RemoteRepo, d *downloader.Downloader, r *resolver.Resolver) *Getter {
 	g := Getter{
 		EmitterBase: events.EmitterBase{
 			Scope: events.ScopeGetter,
@@ -38,7 +37,7 @@ func New(view ux.View, p *paths.Paths, iRepo packages.InstalledRepo, d *download
 		paths: p,
 
 		iRepo: iRepo,
-		rRepo: remote.New(),
+		rRepo: rRepo,
 
 		downloader: d,
 		resolver:   r,
@@ -48,8 +47,9 @@ func New(view ux.View, p *paths.Paths, iRepo packages.InstalledRepo, d *download
 }
 
 // Get downloads a package and stores it in PkgID/ dir
-func (g *Getter) Get(ctx context.Context, parentOp events.Operation, pkgID string) error {
-	op := g.StartOp(parentOp, fmt.Sprintf("get %s", pkgID))
+func (g *Getter) Get(ctx context.Context, pkgID string) error {
+	pOp, _ := events.OpFromCtx(ctx)
+	op := g.StartOp(pOp, fmt.Sprintf("get %s", pkgID))
 	g.EmitStart(op, fmt.Sprintf("starting installation of: %s", pkgID))
 	defer g.EmitEnd(op)
 
@@ -62,7 +62,7 @@ func (g *Getter) Get(ctx context.Context, parentOp events.Operation, pkgID strin
 	}
 
 	// get remote package
-	pkg, err := g.rRepo.GetByID(ctx, packages.PkgID(pkgID))
+	pkg, err := g.rRepo.GetByID(events.WithOp(ctx, op), packages.PkgID(pkgID))
 	if err != nil {
 		return err
 	}
@@ -71,7 +71,7 @@ func (g *Getter) Get(ctx context.Context, parentOp events.Operation, pkgID strin
 	}
 
 	// resolve remote package
-	resolved, err := g.resolver.Resolve(ctx, parentOp, pkg)
+	resolved, err := g.resolver.Resolve(events.WithOp(ctx, op), pkg)
 	if err != nil {
 		return err
 	}
@@ -83,7 +83,7 @@ func (g *Getter) Get(ctx context.Context, parentOp events.Operation, pkgID strin
 	}
 
 	// download entries
-	resultFiles, err := g.downloader.Download(ctx, tmp, op, buildFileRequests(resolved))
+	resultFiles, err := g.downloader.Download(events.WithOp(ctx, op), tmp, buildFileRequests(resolved))
 	if err != nil {
 		return err
 	}

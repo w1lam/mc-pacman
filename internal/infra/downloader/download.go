@@ -3,9 +3,9 @@ package downloader
 
 import (
 	"context"
+	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
-	"hash"
 	"io"
 	"net/http"
 	"os"
@@ -55,7 +55,6 @@ type FileResult struct {
 func (d *Downloader) Download(
 	ctx context.Context,
 	destDir string,
-	parentOp events.Operation,
 	files []FileRequest,
 ) ([]FileResult, error) {
 	var (
@@ -66,7 +65,8 @@ func (d *Downloader) Download(
 		errCh   = make(chan error, 1)
 	)
 
-	op := d.StartOp(parentOp, fmt.Sprintf("download to %s", destDir))
+	pOp, _ := events.OpFromCtx(ctx)
+	op := d.StartOp(pOp, fmt.Sprintf("download_to_%s", filepath.Base(destDir)))
 	d.EmitStart(op, fmt.Sprintf("starting download to %s", destDir))
 	defer d.EmitEnd(op)
 
@@ -118,7 +118,7 @@ func (d *Downloader) downloadOne(
 	destDir string,
 	file FileRequest,
 ) (FileResult, error) {
-	op := d.StartOp(parentOp, fmt.Sprintf("download %s", file.FileName))
+	op := d.StartOp(parentOp, fmt.Sprintf("download_file_%s", file.FileName))
 	d.EmitStart(op, fmt.Sprintf("starting download: %s", file.FileName))
 	defer d.EmitEnd(op)
 
@@ -129,7 +129,7 @@ func (d *Downloader) downloadOne(
 
 	resp, err := d.client.Do(req)
 	if err != nil {
-		return FileResult{}, nil
+		return FileResult{}, err
 	}
 	defer resp.Body.Close()
 
@@ -140,12 +140,11 @@ func (d *Downloader) downloadOne(
 	outPath := filepath.Join(destDir, file.FileName)
 	outFile, err := os.Create(outPath)
 	if err != nil {
-		return FileResult{}, nil
+		return FileResult{}, err
 	}
 	defer outFile.Close()
 
-	var hasher hash.Hash
-
+	hasher := sha512.New()
 	writer := io.MultiWriter(outFile, hasher)
 
 	buf := make([]byte, 32*1024)
@@ -159,7 +158,7 @@ func (d *Downloader) downloadOne(
 
 			downloaded += int64(n)
 			d.Emit(events.Event{
-				Type:       events.EventUpdate,
+				Type:       events.EventDownload,
 				Op:         op,
 				FileName:   file.FileName,
 				Percentage: float64(downloaded) / float64(file.Size) * 100,
@@ -172,10 +171,6 @@ func (d *Downloader) downloadOne(
 		if err != nil {
 			return FileResult{}, err
 		}
-	}
-
-	if _, err := io.Copy(writer, resp.Body); err != nil {
-		return FileResult{}, err
 	}
 
 	computed := hex.EncodeToString(hasher.Sum(nil))

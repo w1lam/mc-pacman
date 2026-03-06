@@ -1,5 +1,6 @@
 package packages
 
+// PackageBase is the base of a package
 type PackageBase struct {
 	Name        string    `json:"name"`
 	ID          PkgID     `json:"id"`
@@ -12,6 +13,7 @@ type PackageBase struct {
 	ListSource  string    `json:"listSource"`
 }
 
+// Package is the base interface of remote and installed packages
 type Package interface {
 	GetBase() PackageBase
 	IsInstalled() bool

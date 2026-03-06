@@ -48,8 +48,8 @@ func New(view ux.View, cfg Config) (*App, error) {
 
 	// repos
 	sRepo := state.NewStateRepo(p.StateFile())
-	iRepo := installed.New(p.PackagesDir())
-	rRepo := remote.New()
+	iRepo := installed.New(view, p.PackagesDir())
+	rRepo := remote.New(view)
 
 	// state init
 	if err := sRepo.Ensure(); err != nil {
@@ -116,7 +116,7 @@ func initUseCases(
 
 	l := lister.New(view, iRepo, rRepo)
 
-	g := getter.New(view, p, iRepo, d, r)
+	g := getter.New(view, p, iRepo, rRepo, d, r)
 
 	v := verifier.New(p, iRepo)
 

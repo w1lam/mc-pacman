@@ -39,11 +39,11 @@ func New(view ux.View, p *paths.Paths, repo state.Repo, g *getter.Getter) *Insta
 }
 
 func (i *Installer) Install(ctx context.Context, pkgID string) error {
-	op := i.StartOp(events.Operation{}, fmt.Sprintf("install %s", pkgID))
+	op := i.StartOp(events.Operation{}, fmt.Sprintf("install_package_%s", pkgID))
 	i.EmitStart(op, fmt.Sprintf("starting installation of %s", pkgID))
 	defer i.EmitEnd(op)
 
-	err := i.getter.Get(ctx, op, pkgID)
+	err := i.getter.Get(events.WithOp(ctx, op), pkgID)
 	if err != nil {
 		return err
 	}

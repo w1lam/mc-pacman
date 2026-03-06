@@ -11,27 +11,31 @@ type EventType string
 const (
 	EventStart    EventType = "start"
 	EventUpdate   EventType = "update"
+	EventDownload EventType = "download"
 	EventSuccess  EventType = "success"
 	EventFailure  EventType = "failure"
 	EventComplete EventType = "complete"
 	EventEnd      EventType = "end"
 	EventError    EventType = "error"
 	EventInfo     EventType = "info"
+	EventPayload  EventType = "payload"
 )
 
 // Scope is the scope of an operation
 type Scope string
 
 const (
-	ScopeDownloader  Scope = "downloader"
-	ScopeGetter      Scope = "getter"
-	ScopeInstaller   Scope = "installer"
-	ScopeUninstaller Scope = "uninstaller"
-	ScopeUpdater     Scope = "updater"
-	ScopeResolver    Scope = "resolver"
-	ScopeVerifier    Scope = "verifier"
-	ScopeBackup      Scope = "backup"
-	ScopeList        Scope = "list"
+	ScopeDownloader    Scope = "downloader"
+	ScopeGetter        Scope = "getter"
+	ScopeInstaller     Scope = "installer"
+	ScopeUninstaller   Scope = "uninstaller"
+	ScopeUpdater       Scope = "updater"
+	ScopeResolver      Scope = "resolver"
+	ScopeVerifier      Scope = "verifier"
+	ScopeBackup        Scope = "backup"
+	ScopeList          Scope = "list"
+	ScopeRemoteRepo    Scope = "remoteRepo"
+	ScopeInstalledRepo Scope = "installedRepo"
 )
 
 // Event is an event payload emitted by services for ux to consume
@@ -46,8 +50,7 @@ type Event struct {
 	Percentage float64
 	Bytes      int
 
-	PackagePayload  PackagePayload
-	PackagePayloads []PackagePayload
+	Payload *Payload
 
 	Error error
 

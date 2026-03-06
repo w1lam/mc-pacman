@@ -3,7 +3,7 @@
   "id": "freaky-franklin",
   "type": "modpack",
   "listVersion": "0.2.3",
-  "mcVersion": "1.21.10",
+  "mcVersion": "1.21.11",
   "loader": "fabric",
   "env": "Client and Server",
   "description": "Mod Pack for Freaky Franklin server that mainly adds visual and small immersion and building mods.",

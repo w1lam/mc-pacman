@@ -55,7 +55,7 @@ func (b *EmitterBase) EmitComplete(op Operation, msg string) {
 	}
 
 	e := Event{
-		Type:      EventEnd,
+		Type:      EventComplete,
 		Op:        op,
 		Message:   msg,
 		Timestamp: time.Now(),
@@ -95,39 +95,62 @@ func (b *EmitterBase) EmitError(op Operation, err error) {
 	b.emitter.Emit(e)
 }
 
-// EmitPackage emit a payload package
+// EmitPackage emits a package
 func (b *EmitterBase) EmitPackage(op Operation, p packages.Package) {
 	if b.emitter == nil {
 		return
 	}
 
 	e := Event{
-		Type:           EventInfo,
-		Op:             op,
-		PackagePayload: NewPackagePayload(p.GetBase(), p.IsInstalled()),
-		Timestamp:      time.Now(),
+		Type: EventPayload,
+		Op:   op,
+		Payload: &Payload{
+			Package: &PackageItem{
+				PackageBase: p.GetBase(),
+				Installed:   p.IsInstalled(),
+			},
+		},
+		Timestamp: time.Now(),
 	}
 
 	b.emitter.Emit(e)
 }
 
-// EmitPackages emit a batch of payload packages
+// EmitPackages emit a batch of packages
 func (b *EmitterBase) EmitPackages(op Operation, ps []packages.Package) {
 	if b.emitter == nil {
 		return
 	}
 
-	pp := make([]PackagePayload, 0, len(ps))
+	pi := make([]PackageItem, 0, len(ps))
 	for _, p := range ps {
-		pp = append(pp, NewPackagePayload(p.GetBase(), p.IsInstalled()))
+		pi = append(pi, PackageItem{
+			PackageBase: p.GetBase(),
+			Installed:   p.IsInstalled(),
+		})
 	}
 
 	e := Event{
-		Type:            EventInfo,
-		Op:              op,
-		PackagePayloads: pp,
-		Timestamp:       time.Now(),
+		Type: EventPayload,
+		Op:   op,
+		Payload: &Payload{
+			Packages: pi,
+		},
+		Timestamp: time.Now(),
 	}
 
 	b.emitter.Emit(e)
+}
+
+func (b *EmitterBase) EmitInfo(op Operation, msg string) {
+	if b.emitter == nil {
+		return
+	}
+
+	b.Emit(Event{
+		Type:      EventInfo,
+		Op:        op,
+		Message:   msg,
+		Timestamp: time.Now(),
+	})
 }

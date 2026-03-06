@@ -1,12 +1,14 @@
 package installed
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 
+	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
 )
 
@@ -77,7 +79,12 @@ func (r *repo) Update(p packages.InstalledPackage) error {
 }
 
 // GetAll gets all installed packages
-func (r *repo) GetAll() ([]packages.InstalledPackage, error) {
+func (r *repo) GetAll(ctx context.Context) ([]packages.InstalledPackage, error) {
+	parentOp, _ := events.OpFromCtx(ctx)
+	op := r.StartOp(parentOp, "get_installed_packages")
+	r.EmitStart(op, "")
+	defer r.EmitEnd(op)
+
 	paths, err := r.scanDir()
 	if err != nil {
 		return nil, err
@@ -105,7 +112,12 @@ func (r *repo) GetAll() ([]packages.InstalledPackage, error) {
 }
 
 // GetByID gets an installed package with given PkgID
-func (r *repo) GetByID(pkgID packages.PkgID) (packages.InstalledPackage, error) {
+func (r *repo) GetByID(ctx context.Context, pkgID packages.PkgID) (packages.InstalledPackage, error) {
+	parentOp, _ := events.OpFromCtx(ctx)
+	op := r.StartOp(parentOp, fmt.Sprintf("get_installed_%s", pkgID))
+	r.EmitStart(op, "")
+	defer r.EmitEnd(op)
+
 	pkgPath := filepath.Join(r.path, string(pkgID), "pkg.json")
 
 	data, err := os.ReadFile(pkgPath)

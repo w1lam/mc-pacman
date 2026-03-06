@@ -14,19 +14,17 @@ func updaterRenderer(e events.Event, ansi bool)    {}
 func resolverRenderer(e events.Event, ansi bool)   {}
 func verifierRenderer(e events.Event, ansi bool)   {}
 func backupRenderer(e events.Event, ansi bool)     {}
+
 func listRenderer(e events.Event, ansi bool) {
 	switch e.Type {
 	case events.EventStart:
 		fmt.Println("listing packages...")
-	default:
-		if e.PackagePayload.ID != "" {
-			for _, p := range e.PackagePayloads {
-				fmt.Println(p.Name)
-				fmt.Println(" " + p.ID)
-				fmt.Println(" " + p.Version)
-				fmt.Println(" " + p.McVersion)
-				fmt.Println()
-			}
-		}
+	}
+	for _, p := range e.Payload.Packages {
+		fmt.Println(p.Name)
+		fmt.Println(" " + p.ID)
+		fmt.Println(" " + p.PkgVersion)
+		fmt.Println(" " + p.McVersion)
+		fmt.Println()
 	}
 }
