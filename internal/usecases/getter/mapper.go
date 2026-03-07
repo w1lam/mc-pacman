@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/infra/downloader"
-	"github.com/w1lam/mc-pacman/internal/infra/resolver"
+	"github.com/w1lam/mc-pacman/internal/services/downloader"
+	"github.com/w1lam/mc-pacman/internal/services/resolver"
 )
 
 type DownloadedPackage struct {

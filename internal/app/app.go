@@ -2,20 +2,20 @@
 package app
 
 import (
-	"github.com/w1lam/mc-pacman/internal/app/activation"
-	"github.com/w1lam/mc-pacman/internal/app/getter"
-	"github.com/w1lam/mc-pacman/internal/app/installer"
-	"github.com/w1lam/mc-pacman/internal/app/lister"
-	"github.com/w1lam/mc-pacman/internal/app/updater"
-	"github.com/w1lam/mc-pacman/internal/app/verifier"
+	"github.com/w1lam/mc-pacman/internal/app/paths"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
 	"github.com/w1lam/mc-pacman/internal/core/state"
-	"github.com/w1lam/mc-pacman/internal/infra/downloader"
 	"github.com/w1lam/mc-pacman/internal/infra/errors"
 	"github.com/w1lam/mc-pacman/internal/infra/installed"
-	"github.com/w1lam/mc-pacman/internal/infra/paths"
 	"github.com/w1lam/mc-pacman/internal/infra/remote"
-	"github.com/w1lam/mc-pacman/internal/infra/resolver"
+	"github.com/w1lam/mc-pacman/internal/services/downloader"
+	"github.com/w1lam/mc-pacman/internal/services/resolver"
+	"github.com/w1lam/mc-pacman/internal/usecases/activation"
+	"github.com/w1lam/mc-pacman/internal/usecases/getter"
+	"github.com/w1lam/mc-pacman/internal/usecases/installer"
+	"github.com/w1lam/mc-pacman/internal/usecases/lister"
+	"github.com/w1lam/mc-pacman/internal/usecases/updater"
+	"github.com/w1lam/mc-pacman/internal/usecases/verifier"
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
 

@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/w1lam/mc-pacman/internal/app/getter"
+	"github.com/w1lam/mc-pacman/internal/app/paths"
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/state"
-	"github.com/w1lam/mc-pacman/internal/infra/paths"
+	"github.com/w1lam/mc-pacman/internal/usecases/getter"
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
 

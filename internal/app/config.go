@@ -1,8 +1,8 @@
 package app
 
 import (
+	"github.com/w1lam/mc-pacman/internal/app/paths"
 	"github.com/w1lam/mc-pacman/internal/core/state"
-	"github.com/w1lam/mc-pacman/internal/infra/paths"
 )
 
 type Config struct {

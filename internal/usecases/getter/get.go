@@ -7,12 +7,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/w1lam/mc-pacman/internal/app/paths"
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/infra/downloader"
 	"github.com/w1lam/mc-pacman/internal/infra/filesystem"
-	"github.com/w1lam/mc-pacman/internal/infra/paths"
-	"github.com/w1lam/mc-pacman/internal/infra/resolver"
+	"github.com/w1lam/mc-pacman/internal/services/downloader"
+	"github.com/w1lam/mc-pacman/internal/services/resolver"
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
 

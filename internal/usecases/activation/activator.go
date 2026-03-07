@@ -2,9 +2,9 @@
 package activation
 
 import (
+	"github.com/w1lam/mc-pacman/internal/app/paths"
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/infra/paths"
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
 

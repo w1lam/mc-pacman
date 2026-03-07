@@ -16,18 +16,18 @@ type Repo interface {
 	Update(func(*State) error) error
 }
 
-type stateRepo struct {
+type repo struct {
 	path string
 	mu   sync.Mutex
 }
 
-func NewStateRepo(path string) *stateRepo {
-	return &stateRepo{
+func NewStateRepo(path string) *repo {
+	return &repo{
 		path: path,
 	}
 }
 
-func (r *stateRepo) Update(fn func(*State) error) error {
+func (r *repo) Update(fn func(*State) error) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -44,7 +44,7 @@ func (r *stateRepo) Update(fn func(*State) error) error {
 }
 
 // Load loads the manifest
-func (r *stateRepo) Load() (*State, error) {
+func (r *repo) Load() (*State, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -52,7 +52,7 @@ func (r *stateRepo) Load() (*State, error) {
 }
 
 // loadFromDisk loads from disk safe
-func (r *stateRepo) loadFromDisk() (*State, error) {
+func (r *repo) loadFromDisk() (*State, error) {
 	data, err := os.ReadFile(r.path)
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -69,7 +69,7 @@ func (r *stateRepo) loadFromDisk() (*State, error) {
 }
 
 // Save saves the given state
-func (r *stateRepo) Save(s *State) error {
+func (r *repo) Save(s *State) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -88,7 +88,7 @@ func (r *stateRepo) Save(s *State) error {
 }
 
 // saveToDisk safe save to disk no mutex locking
-func (r *stateRepo) saveToDisk(m *State) error {
+func (r *repo) saveToDisk(m *State) error {
 	tmp := r.path + ".tmp"
 
 	data, err := json.MarshalIndent(m, "", "  ")
@@ -119,7 +119,7 @@ func (r *stateRepo) saveToDisk(m *State) error {
 }
 
 // Ensureensures the state is initialized
-func (r *stateRepo) Ensure() error {
+func (r *repo) Ensure() error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
