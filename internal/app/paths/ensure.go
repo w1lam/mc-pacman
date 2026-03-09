@@ -1,6 +1,10 @@
 package paths
 
-import "os"
+import (
+	"errors"
+	"fmt"
+	"os"
+)
 
 // Ensure ensures all directories exist
 func (p *Paths) Ensure() error {
@@ -18,5 +22,18 @@ func (p *Paths) Ensure() error {
 		}
 	}
 
+	return nil
+}
+
+var ErrMcDirNotConfigured error = errors.New("mcDir not configured")
+
+// Validate validates the minecraft directory in Paths
+func (p *Paths) Validate() error {
+	if p.minecraftDir == "" {
+		return ErrMcDirNotConfigured
+	}
+	if _, err := os.Stat(p.minecraftDir); err != nil {
+		return fmt.Errorf("minecraft directory does not exist: %s", p.minecraftDir)
+	}
 	return nil
 }

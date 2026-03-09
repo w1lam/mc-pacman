@@ -20,7 +20,7 @@ func RootDir() string {
 	case "linux":
 		return filepath.Join(home, ".mcpacman")
 	case "darwin":
-		return filepath.Join("Library", "Application Support", "mcpacman")
+		return filepath.Join(home, "Library", "Application Support", "mcpacman")
 	default:
 		return filepath.Join(home, ".mcpacman")
 	}
@@ -44,7 +44,7 @@ func DefaultMinecraftDir() string {
 			return dir
 		}
 	case "darwin":
-		dir := filepath.Join("Library", "Application Support", "minecraft")
+		dir := filepath.Join(home, "Library", "Application Support", "minecraft")
 		if utils.CheckFileExists(dir) {
 			return dir
 		}

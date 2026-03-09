@@ -32,6 +32,7 @@ const (
 	ScopeUpdater       Scope = "updater"
 	ScopeResolver      Scope = "resolver"
 	ScopeVerifier      Scope = "verifier"
+	ScopeActivator     Scope = "activator"
 	ScopeBackup        Scope = "backup"
 	ScopeList          Scope = "list"
 	ScopeRemoteRepo    Scope = "remoteRepo"

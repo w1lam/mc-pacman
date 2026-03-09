@@ -12,17 +12,18 @@ import (
 	"github.com/w1lam/Packages/modrinth"
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/ux"
+	"github.com/w1lam/mc-pacman/internal/usecases"
 )
 
 // Resolver handles resolving remote packages
 type Resolver struct {
-	events.EmitterBase
+	usecases.Base
+
 	modClient *modrinth.Client
 }
 
 // New creates a new resolver
-func New(view ux.View, agent string) *Resolver {
+func New(base usecases.Base, agent string) *Resolver {
 	cfg := modrinth.Config{
 		BaseURL: "",
 		Agent:   agent,
@@ -32,13 +33,10 @@ func New(view ux.View, agent string) *Resolver {
 	c := modrinth.NewClient(cfg)
 
 	r := Resolver{
-		EmitterBase: events.EmitterBase{
-			Scope: events.ScopeResolver,
-		},
+		Base:      base,
 		modClient: c,
 	}
 
-	r.SetEmitter(view)
 	return &r
 }
 
@@ -56,6 +54,7 @@ type ResolvedPackage struct {
 // ResolvedFile is a file that has been resolved and is ready for download
 type ResolvedFile struct {
 	ID       packages.EntryID
+	Type     packages.EntryTypeID
 	Version  string
 	FileName string
 	Size     int64
@@ -148,6 +147,7 @@ func (r *Resolver) Resolve(
 
 			resolved := ResolvedFile{
 				ID:       entry.ID,
+				Type:     entry.Type,
 				Version:  version.VersionNumber,
 				FileName: primary.FileName,
 				Size:     primary.Size,

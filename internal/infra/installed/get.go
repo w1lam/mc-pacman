@@ -29,7 +29,7 @@ func (r *repo) Add(p packages.InstalledPackage, entriesSrcDir string) error {
 	pkgDir := filepath.Join(r.path, string(p.ID))
 	entriesDir := filepath.Join(pkgDir, "entries")
 
-	if err := os.MkdirAll(entriesDir, 0o755); err != nil {
+	if err := os.MkdirAll(pkgDir, 0o755); err != nil {
 		return fmt.Errorf("failed to create entries dir: %w", err)
 	}
 
@@ -145,7 +145,7 @@ func (r *repo) scanDir() ([]string, error) {
 
 	var dirs []string
 	for _, entry := range entries {
-		if !entry.IsDir() {
+		if entry.IsDir() {
 			dirs = append(dirs, filepath.Join(r.path, entry.Name()))
 		}
 	}

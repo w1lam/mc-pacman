@@ -14,27 +14,26 @@ import (
 	"time"
 
 	"github.com/w1lam/mc-pacman/internal/core/events"
-	"github.com/w1lam/mc-pacman/internal/ux"
+	"github.com/w1lam/mc-pacman/internal/usecases"
 )
 
 // Downloader is the downloader service
 type Downloader struct {
-	events.EmitterBase
+	usecases.Base
+
 	client      *http.Client
 	maxParallel int
 }
 
-func New(view ux.View) *Downloader {
+func New(base usecases.Base) *Downloader {
 	d := Downloader{
-		EmitterBase: events.EmitterBase{
-			Scope: events.ScopeDownloader,
-		},
+		Base: base,
 		client: &http.Client{
 			Timeout: 30 * time.Second,
 		},
 		maxParallel: 5,
 	}
-	d.SetEmitter(view)
+
 	return &d
 }
 
@@ -159,6 +158,7 @@ func (d *Downloader) downloadOne(
 			downloaded += int64(n)
 			d.Emit(events.Event{
 				Type:       events.EventDownload,
+				SubScope:   "perFile",
 				Op:         op,
 				FileName:   file.FileName,
 				Percentage: float64(downloaded) / float64(file.Size) * 100,

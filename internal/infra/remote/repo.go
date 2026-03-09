@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/w1lam/mc-pacman/internal/core/events"
@@ -26,9 +25,6 @@ type repo struct {
 	baseURL string
 	rawURL  string
 	client  *http.Client
-
-	mu    sync.Mutex
-	cache map[packages.PkgID]packages.RemotePackage
 }
 
 // New creates a new remote repository
@@ -42,8 +38,6 @@ func New(view ux.View) *repo {
 		client: &http.Client{
 			Timeout: time.Second * 30,
 		},
-
-		cache: make(map[packages.PkgID]packages.RemotePackage),
 	}
 	r.SetEmitter(view)
 

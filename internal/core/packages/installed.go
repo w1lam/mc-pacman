@@ -14,8 +14,9 @@ type InstalledPackage struct {
 
 // InstalledPackageEntry is a mod entry in the manifest that holds all information about an entry
 type InstalledPackageEntry struct {
-	ID      EntryID `json:"id"` // id or slug
-	Version string  `json:"version"`
+	ID      EntryID     `json:"id"` // id or slug
+	Type    EntryTypeID `json:"type"`
+	Version string      `json:"version"`
 
 	FileName string `json:"fileName"`
 	Hash     string `json:"hash"`
@@ -27,7 +28,7 @@ func (p InstalledPackage) GetBase() PackageBase {
 }
 
 func (p InstalledPackage) IsInstalled() bool {
-	return false
+	return true
 }
 
 type InstalledRepo interface {

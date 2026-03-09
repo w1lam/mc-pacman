@@ -7,7 +7,33 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/w1lam/mc-pacman/internal/core/events"
 )
+
+type Logger struct{}
+
+func New() *Logger {
+	return &Logger{}
+}
+
+func (l *Logger) Log(scope events.Scope, op events.Operation, err error) {
+	report(string(scope), err)
+}
+
+func (l *Logger) LogFatal(scope events.Scope, op events.Operation, err error) {
+	select {
+	case errCh <- AppError{
+		Time:    time.Now(),
+		Source:  string(scope),
+		Message: err.Error(),
+		Fatal:   true,
+	}:
+	default:
+		fmt.Println("FATAL:", err)
+		os.Exit(1)
+	}
+}
 
 // AppError represents an application error
 type AppError struct {
@@ -61,8 +87,8 @@ func processErrors() {
 	}
 }
 
-// Report reports an error to the error logging system
-func Report(source string, err error) {
+// report reports an error to the error logging system
+func report(source string, err error) {
 	if err == nil {
 		return
 	}
@@ -79,8 +105,8 @@ func Report(source string, err error) {
 	}
 }
 
-// ReportCtx reports an error with context to the error logging system
-func ReportCtx(source string, err error, ctx map[string]string) {
+// reportCtx reports an error with context to the error logging system
+func reportCtx(source string, err error, ctx map[string]string) {
 	if err == nil {
 		return
 	}

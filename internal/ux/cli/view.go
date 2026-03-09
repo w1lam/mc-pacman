@@ -5,7 +5,7 @@ import (
 	"github.com/w1lam/mc-pacman/internal/core/events"
 )
 
-// TODO: FIX LISTER RENDERERING TO WORK WITH NEW PACKAGES INDEX STRUCTURE
+// TODO: MAKE ALL RENDERERS FOR CLI
 
 type CLIView struct {
 	ansi bool

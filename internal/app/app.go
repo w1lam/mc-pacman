@@ -8,14 +8,6 @@ import (
 	"github.com/w1lam/mc-pacman/internal/infra/errors"
 	"github.com/w1lam/mc-pacman/internal/infra/installed"
 	"github.com/w1lam/mc-pacman/internal/infra/remote"
-	"github.com/w1lam/mc-pacman/internal/services/downloader"
-	"github.com/w1lam/mc-pacman/internal/services/resolver"
-	"github.com/w1lam/mc-pacman/internal/usecases/activation"
-	"github.com/w1lam/mc-pacman/internal/usecases/getter"
-	"github.com/w1lam/mc-pacman/internal/usecases/installer"
-	"github.com/w1lam/mc-pacman/internal/usecases/lister"
-	"github.com/w1lam/mc-pacman/internal/usecases/updater"
-	"github.com/w1lam/mc-pacman/internal/usecases/verifier"
 	"github.com/w1lam/mc-pacman/internal/ux"
 )
 
@@ -25,15 +17,15 @@ type App struct {
 
 	*useCases
 
-	paths *paths.Paths
+	Paths *paths.Paths
 
-	stateRepo     state.Repo
-	remoteRepo    packages.RemoteRepo
-	installedRepo packages.InstalledRepo
+	StateRepo     state.Repo
+	RemoteRepo    packages.RemoteRepo
+	InstalledRepo packages.InstalledRepo
 }
 
 // New creates a new App initializing core of app
-func New(view ux.View, cfg Config) (*App, error) {
+func New(view ux.View) (*App, error) {
 	p := paths.New(paths.RootDir(), "")
 
 	// EnsureDirectories
@@ -45,6 +37,7 @@ func New(view ux.View, cfg Config) (*App, error) {
 	if err := errors.Start(p.LogFile()); err != nil {
 		return nil, err
 	}
+	logger := errors.New()
 
 	// repos
 	sRepo := state.NewStateRepo(p.StateFile())
@@ -61,7 +54,7 @@ func New(view ux.View, cfg Config) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	mcDir := resolveMincraftDir(st, cfg.McDir)
+	mcDir := resolveMincraftDir(st, "")
 
 	// update state
 	if err := sRepo.Update(func(s *state.State) error {
@@ -75,61 +68,17 @@ func New(view ux.View, cfg Config) (*App, error) {
 	p = paths.New(paths.RootDir(), mcDir)
 
 	// initialize useCases
-	uc := initUseCases(p, sRepo, iRepo, rRepo, view)
+	uc := initUseCases(p, sRepo, iRepo, rRepo, view, logger)
 
 	return &App{
 		view: view,
 
 		useCases: uc,
 
-		paths:     p,
-		stateRepo: sRepo,
+		Paths: p,
 
-		remoteRepo:    rRepo,
-		installedRepo: iRepo,
+		StateRepo:     sRepo,
+		RemoteRepo:    rRepo,
+		InstalledRepo: iRepo,
 	}, nil
-}
-
-// useCases holds all UseCases strored in app
-type useCases struct {
-	Installer *installer.Installer
-	Getter    *getter.Getter
-	Updater   *updater.Updater
-	Verifier  *verifier.Verifier
-	Lister    *lister.Lister
-	Activator *activation.Activator
-}
-
-// initUseCases initializes all use cases with their dependencies and returns a useCases struct
-func initUseCases(
-	p *paths.Paths,
-	sRepo state.Repo,
-	iRepo packages.InstalledRepo,
-	rRepo packages.RemoteRepo,
-	view ux.View,
-) *useCases {
-	a := activation.New(view, iRepo, p)
-
-	r := resolver.New(view, UserAgent())
-
-	d := downloader.New(view)
-
-	l := lister.New(view, iRepo, rRepo)
-
-	g := getter.New(view, p, iRepo, rRepo, d, r)
-
-	v := verifier.New(p, iRepo)
-
-	i := installer.New(view, p, sRepo, g)
-
-	u := updater.New(view, iRepo, rRepo)
-
-	return &useCases{
-		Installer: i,
-		Getter:    g,
-		Updater:   u,
-		Verifier:  v,
-		Lister:    l,
-		Activator: a,
-	}
 }

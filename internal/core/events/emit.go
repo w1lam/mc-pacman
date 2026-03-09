@@ -15,11 +15,16 @@ type Emitter interface {
 type EmitterBase struct {
 	Scope   Scope
 	emitter Emitter
+	logger  Logger
 }
 
 // SetEmitter sets emitter for EmitterBase
 func (b *EmitterBase) SetEmitter(e Emitter) {
 	b.emitter = e
+}
+
+func (b *EmitterBase) SetLogger(l Logger) {
+	b.logger = l
 }
 
 // Emit base emit helper, auto set timestamp
@@ -81,6 +86,10 @@ func (b *EmitterBase) EmitEnd(op Operation) {
 
 // EmitError error emitter helper
 func (b *EmitterBase) EmitError(op Operation, err error) {
+	if b.logger != nil {
+		b.logger.Log(b.Scope, op, err)
+	}
+
 	if b.emitter == nil {
 		return
 	}

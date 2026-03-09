@@ -49,6 +49,7 @@ func buildInstalledPackage(downloaded DownloadedPackage, hash string) (packages.
 func buildInstalledPackageEntry(resolved resolver.ResolvedFile, result downloader.FileResult) packages.InstalledPackageEntry {
 	return packages.InstalledPackageEntry{
 		ID:       resolved.ID,
+		Type:     resolved.Type,
 		Version:  resolved.Version,
 		FileName: result.FileName,
 		Hash:     result.Hash,

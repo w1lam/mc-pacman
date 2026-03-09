@@ -7,24 +7,22 @@ import (
 
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
-	"github.com/w1lam/mc-pacman/internal/ux"
+	"github.com/w1lam/mc-pacman/internal/usecases"
 )
 
 type Lister struct {
-	events.EmitterBase
+	usecases.Base
+
 	installedRepo packages.InstalledRepo
 	remoteRepo    packages.RemoteRepo
 }
 
-func New(view ux.View, iRepo packages.InstalledRepo, rRepo packages.RemoteRepo) *Lister {
+func New(base usecases.Base, iRepo packages.InstalledRepo, rRepo packages.RemoteRepo) *Lister {
 	l := Lister{
-		EmitterBase: events.EmitterBase{
-			Scope: events.ScopeList,
-		},
+		Base:          base,
 		installedRepo: iRepo,
 		remoteRepo:    rRepo,
 	}
-	l.SetEmitter(view)
 
 	return &l
 }
@@ -78,7 +76,7 @@ func (l *Lister) ListAll(ctx context.Context) error {
 
 	ps := make([]packages.Package, 0, len(pkgs))
 	for _, p := range pkgs {
-		pkgs = append(pkgs, p)
+		ps = append(ps, p)
 	}
 	l.EmitPackages(op, ps)
 

@@ -10,15 +10,16 @@ import (
 	"github.com/w1lam/mc-pacman/internal/app/paths"
 	"github.com/w1lam/mc-pacman/internal/core/events"
 	"github.com/w1lam/mc-pacman/internal/core/packages"
+	"github.com/w1lam/mc-pacman/internal/core/rollback"
 	"github.com/w1lam/mc-pacman/internal/infra/filesystem"
 	"github.com/w1lam/mc-pacman/internal/services/downloader"
 	"github.com/w1lam/mc-pacman/internal/services/resolver"
-	"github.com/w1lam/mc-pacman/internal/ux"
+	"github.com/w1lam/mc-pacman/internal/usecases"
 )
 
 // Getter gets a package and installs it to the correct location
 type Getter struct {
-	events.EmitterBase
+	usecases.Base
 
 	paths *paths.Paths
 	iRepo packages.InstalledRepo
@@ -29,11 +30,9 @@ type Getter struct {
 }
 
 // New creates a new getter useCase
-func New(view ux.View, p *paths.Paths, iRepo packages.InstalledRepo, rRepo packages.RemoteRepo, d *downloader.Downloader, r *resolver.Resolver) *Getter {
+func New(base usecases.Base, p *paths.Paths, iRepo packages.InstalledRepo, rRepo packages.RemoteRepo, d *downloader.Downloader, r *resolver.Resolver) *Getter {
 	g := Getter{
-		EmitterBase: events.EmitterBase{
-			Scope: events.ScopeGetter,
-		},
+		Base:  base,
 		paths: p,
 
 		iRepo: iRepo,
@@ -42,12 +41,13 @@ func New(view ux.View, p *paths.Paths, iRepo packages.InstalledRepo, rRepo packa
 		downloader: d,
 		resolver:   r,
 	}
-	g.SetEmitter(view)
 	return &g
 }
 
 // Get downloads a package and stores it in PkgID/ dir
 func (g *Getter) Get(ctx context.Context, pkgID string) error {
+	var rb rollback.Rollback
+
 	pOp, _ := events.OpFromCtx(ctx)
 	op := g.StartOp(pOp, fmt.Sprintf("get %s", pkgID))
 	g.EmitStart(op, fmt.Sprintf("starting installation of: %s", pkgID))
@@ -81,10 +81,12 @@ func (g *Getter) Get(ctx context.Context, pkgID string) error {
 	if err != nil {
 		return err
 	}
+	rb.Add(func() error { return os.RemoveAll(tmp) })
 
 	// download entries
 	resultFiles, err := g.downloader.Download(events.WithOp(ctx, op), tmp, buildFileRequests(resolved))
 	if err != nil {
+		rb.Run()
 		return err
 	}
 
@@ -103,6 +105,7 @@ func (g *Getter) Get(ctx context.Context, pkgID string) error {
 	}
 
 	if err := g.iRepo.Add(installed, tmp); err != nil {
+		rb.Run()
 		return err
 	}
 
