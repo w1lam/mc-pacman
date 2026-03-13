@@ -49,7 +49,6 @@ func (r *repo) GetAll(ctx context.Context) ([]packages.RemotePackage, error) {
 	parentOp, _ := events.OpFromCtx(ctx)
 	op := r.StartOp(parentOp, "get_remote_packages")
 	r.EmitStart(op, "")
-	defer r.EmitEnd(op)
 
 	url := fmt.Sprintf("%scontents/packages", r.baseURL)
 
@@ -83,7 +82,6 @@ func (r *repo) GetByID(ctx context.Context, pkgID packages.PkgID) (packages.Remo
 	parentOp, _ := events.OpFromCtx(ctx)
 	op := r.StartOp(parentOp, fmt.Sprintf("get_remote_%s", pkgID))
 	r.EmitStart(op, "")
-	defer r.EmitEnd(op)
 
 	url := fmt.Sprintf("%spackages/%s/pkg.json", r.rawURL, pkgID)
 

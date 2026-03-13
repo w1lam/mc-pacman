@@ -14,24 +14,20 @@ func NewDebugView() *DebugView {
 }
 
 func (v *DebugView) Emit(e events.Event) {
-	if e.SubScope == "perFile" {
-		return
+	indent := strings.Repeat("-", e.Op.Depth) + ">"
+	if e.Op.Depth > 0 {
+		indent = fmt.Sprintf("⮡%s", indent)
 	}
 
-	sep := ""
-	if e.Op.ParentID != "" {
-		sep = " ⮡ "
-	} else {
-		fmt.Println()
-	}
 	fmt.Printf("%s %s[%s:%s] (%s) -> %s\n",
 		e.Timestamp.Format("15:04:05"),
-		sep,
-		strings.ToUpper(string(e.Op.Scope)),
+		indent,
+		e.Op.Scope,
 		e.Op.ID,
-		strings.ToUpper(string(e.Type)),
+		e.Type,
 		e.Op.Intent,
 	)
+
 	if e.Message != "" {
 		fmt.Printf("          ⮡ #INFO# %s\n", e.Message)
 	}

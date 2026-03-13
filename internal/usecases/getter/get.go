@@ -51,7 +51,6 @@ func (g *Getter) Get(ctx context.Context, pkgID string) error {
 	pOp, _ := events.OpFromCtx(ctx)
 	op := g.StartOp(pOp, fmt.Sprintf("get %s", pkgID))
 	g.EmitStart(op, fmt.Sprintf("starting installation of: %s", pkgID))
-	defer g.EmitEnd(op)
 
 	exists, err := g.iRepo.Exists(packages.PkgID(pkgID))
 	if err != nil {

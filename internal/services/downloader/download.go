@@ -67,7 +67,6 @@ func (d *Downloader) Download(
 	pOp, _ := events.OpFromCtx(ctx)
 	op := d.StartOp(pOp, fmt.Sprintf("download_to_%s", filepath.Base(destDir)))
 	d.EmitStart(op, fmt.Sprintf("starting download to %s", destDir))
-	defer d.EmitEnd(op)
 
 	for _, file := range files {
 		file := file
@@ -117,10 +116,39 @@ func (d *Downloader) downloadOne(
 	destDir string,
 	file FileRequest,
 ) (FileResult, error) {
-	op := d.StartOp(parentOp, fmt.Sprintf("download_file_%s", file.FileName))
+	op := d.StartOp(parentOp, fmt.Sprintf("download_file:%s", file.FileName))
 	d.EmitStart(op, fmt.Sprintf("starting download: %s", file.FileName))
-	defer d.EmitEnd(op)
 
+	const maxRetries = 3
+	var lastErr error
+
+	for attempt := 0; attempt < maxRetries; attempt++ {
+		result, err := d.attemptDownload(ctx, op, destDir, file)
+
+		if err == nil {
+			d.EmitComplete(op, fmt.Sprintf("download complete: %s", file.FileName))
+			return result, nil
+		}
+
+		lastErr = err
+
+		if attempt < maxRetries-1 {
+			d.EmitWarn(op, err, fmt.Sprintf("attempt %d/%d failed, retrying...", attempt, maxRetries))
+			time.Sleep(time.Second * time.Duration(1<<attempt))
+			continue
+		}
+	}
+
+	d.EmitError(op, lastErr, fmt.Sprintf("download failed after %d attempts", maxRetries))
+	return FileResult{}, lastErr
+}
+
+func (d *Downloader) attemptDownload(
+	ctx context.Context,
+	op events.Operation,
+	destDir string,
+	file FileRequest,
+) (FileResult, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, file.URL, nil)
 	if err != nil {
 		return FileResult{}, err
@@ -133,12 +161,13 @@ func (d *Downloader) downloadOne(
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return FileResult{}, fmt.Errorf("bad status: %s", resp.Status)
+		return FileResult{}, fmt.Errorf("bad_status: %s", resp.Status)
 	}
 
 	outPath := filepath.Join(destDir, file.FileName)
 	outFile, err := os.Create(outPath)
 	if err != nil {
+		d.EmitError(op, err, "failed to create outFile:"+outFile.Name())
 		return FileResult{}, err
 	}
 	defer outFile.Close()
@@ -156,11 +185,10 @@ func (d *Downloader) downloadOne(
 			}
 
 			downloaded += int64(n)
-			d.Emit(events.Event{
-				Type:       events.EventDownload,
-				SubScope:   "perFile",
-				Op:         op,
-				FileName:   file.FileName,
+			d.EmitProgress(op, events.Progress{
+				Label:      file.FileName,
+				Current:    downloaded,
+				Total:      file.Size,
 				Percentage: float64(downloaded) / float64(file.Size) * 100,
 			})
 		}
@@ -176,11 +204,10 @@ func (d *Downloader) downloadOne(
 	computed := hex.EncodeToString(hasher.Sum(nil))
 
 	if file.Hash != "" && computed != file.Hash {
-		d.EmitError(op, fmt.Errorf("hash mismath for %s", file.ID))
-		return FileResult{}, fmt.Errorf("hash mismatch for %s", file.ID)
-	}
+		os.Remove(outPath)
 
-	d.EmitComplete(op, fmt.Sprintf("download complete: %s", file.FileName))
+		return FileResult{}, fmt.Errorf("hash_mismatch")
+	}
 
 	return FileResult{
 		ID:       file.ID,

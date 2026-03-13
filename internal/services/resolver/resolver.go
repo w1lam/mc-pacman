@@ -71,7 +71,6 @@ func (r *Resolver) Resolve(
 	pOp, _ := events.OpFromCtx(ctx)
 	op := r.StartOp(pOp, fmt.Sprintf("resolve_package_%s", pkg.ID))
 	r.EmitStart(op, fmt.Sprintf("resolving package: %s", pkg.ID))
-	defer r.EmitEnd(op)
 
 	filter := modrinth.VersionFilter{
 		GameVersion: pkg.McVersion,
@@ -95,90 +94,101 @@ func (r *Resolver) Resolve(
 		g.Go(func() error {
 			cOp := r.StartOp(op, fmt.Sprintf("resolving_%s_%s", entry.Type, entry.ID))
 			r.EmitStart(cOp, "")
-			defer r.EmitEnd(cOp)
 
 			select {
 			case sem <- struct{}{}:
 			case <-ctx.Done():
-				r.EmitError(cOp, fmt.Errorf("cancelled: %w", ctx.Err()))
+				r.EmitError(cOp, fmt.Errorf("cancelled_%w", ctx.Err()), fmt.Sprintf("operation canelled: %v", ctx.Err()))
 				return ctx.Err()
 			}
 			defer func() { <-sem }()
 
-			version, err := r.modClient.ResolveBestVersion(
-				ctx,
-				string(entry.ID),
-				entry.PinnedVer,
-				filter,
-			)
-			if err != nil {
-				r.EmitError(cOp, err)
-				return err
-			}
-
-			if version == nil {
-				fallbackFilter := modrinth.VersionFilter{Loader: filter.Loader}
-				version, err = r.modClient.ResolveBestVersion(ctx, string(entry.ID), entry.PinnedVer, fallbackFilter)
-				if err != nil {
-					r.EmitError(cOp, err)
-					return err
-				}
-
-				if version == nil {
-					mu.Lock()
-					failures = append(failures, ResolutionFailure{
-						EntryID: entry.ID,
-						Err:     fmt.Errorf("no_matching_version_for_%s", entry.ID),
-					})
-					mu.Unlock()
-					r.EmitError(cOp, failures[len(failures)-1].Err)
-					return nil
-				}
-				r.EmitInfo(cOp, fmt.Sprintf("fallback_version_%s_used_for_%s", version.VersionNumber, entry.ID))
-			}
-
-			var primary *modrinth.File
-			for i := range version.Files {
-				if version.Files[i].Primary {
-					primary = &version.Files[i]
-					break
-				}
-			}
-
-			resolved := ResolvedFile{
-				ID:       entry.ID,
-				Type:     entry.Type,
-				Version:  version.VersionNumber,
-				FileName: primary.FileName,
-				Size:     primary.Size,
-				URL:      primary.URL,
-				Hash:     primary.Hashes.Sha512,
-				Algo:     "shaa512",
-			}
+			resolved, err := r.resolveOne(ctx, op, entry, filter)
 
 			mu.Lock()
-			files = append(files, resolved)
-			mu.Unlock()
+			defer mu.Unlock()
 
-			newCompleted := atomic.AddInt32(&completed, 1)
-
-			_ = newCompleted
-
-			r.EmitComplete(cOp, fmt.Sprintf("version_%s_found_for_%s", version.VersionNumber, entry.ID))
+			if err != nil {
+				failures = append(failures, ResolutionFailure{
+					EntryID: entry.ID,
+					Err:     err,
+				})
+			} else {
+				files = append(files, resolved)
+				atomic.AddInt32(&completed, 1)
+			}
 
 			return nil
 		})
 
 	}
 	if err := g.Wait(); err != nil {
+		r.EmitError(op, err, "")
 		return ResolvedPackage{}, err
 	}
 
-	r.EmitComplete(op, fmt.Sprintf("version_found_for_%d/%d_entries", completed, len(pkg.Entries)))
+	r.EmitComplete(op, fmt.Sprintf("resolved %d/%d entries", completed, len(pkg.Entries)))
 
 	return ResolvedPackage{
 		Remote:   pkg,
 		Files:    files,
 		Failures: failures,
 	}, nil
+}
+
+func (r *Resolver) resolveOne(ctx context.Context, parentOp events.Operation, entry packages.RemoteEntry, filter modrinth.VersionFilter) (ResolvedFile, error) {
+	op := r.StartOp(parentOp, fmt.Sprintf("resolve_%s", entry.ID))
+	r.EmitStart(op, "")
+
+	version, err := r.modClient.ResolveBestVersion(
+		ctx,
+		string(entry.ID),
+		entry.PinnedVer,
+		filter,
+	)
+	if err != nil {
+		r.EmitError(op, err, "")
+		return ResolvedFile{}, err
+	}
+
+	if version == nil {
+		r.EmitInfo(op, "no version found, trying fallback filter")
+
+		fallbackFilter := modrinth.VersionFilter{Loader: filter.Loader}
+		version, err = r.modClient.ResolveBestVersion(ctx, string(entry.ID), entry.PinnedVer, fallbackFilter)
+		if err != nil {
+			r.EmitError(op, err, "")
+			return ResolvedFile{}, err
+		}
+
+		if version == nil {
+			err := fmt.Errorf("no_matching_version_for_%s", entry.ID)
+			r.EmitError(op, err, "")
+			return ResolvedFile{}, err
+		}
+
+		r.EmitInfo(op, fmt.Sprintf("using fallback version for: %s", version.VersionNumber))
+	}
+
+	var primary *modrinth.File
+	for i := range version.Files {
+		if version.Files[i].Primary {
+			primary = &version.Files[i]
+			break
+		}
+	}
+
+	resolved := ResolvedFile{
+		ID:       entry.ID,
+		Type:     entry.Type,
+		Version:  version.VersionNumber,
+		FileName: primary.FileName,
+		Size:     primary.Size,
+		URL:      primary.URL,
+		Hash:     primary.Hashes.Sha512,
+		Algo:     "shaa512",
+	}
+
+	r.EmitComplete(op, fmt.Sprintf("resolved to version %s", version.VersionNumber))
+	return resolved, nil
 }

@@ -18,119 +18,121 @@ type EmitterBase struct {
 	logger  Logger
 }
 
-// SetEmitter sets emitter for EmitterBase
+// SetEmitter sets the emitter for the EmitterBase
 func (b *EmitterBase) SetEmitter(e Emitter) {
 	b.emitter = e
 }
 
+// SetLogger sets the logger for the EmitterBase
 func (b *EmitterBase) SetLogger(l Logger) {
 	b.logger = l
 }
 
-// Emit base emit helper, auto set timestamp
-func (b *EmitterBase) Emit(e Event) {
+// emit is the base emit helper that automatically adds timestamp and checks if emitter is nil
+func (b *EmitterBase) emit(e Event) {
 	if b.emitter == nil {
 		return
 	}
-
 	e.Timestamp = time.Now()
 	b.emitter.Emit(e)
 }
 
 // EmitStart operation start helper
 func (b *EmitterBase) EmitStart(op Operation, msg string) {
-	if b.emitter == nil {
-		return
-	}
-
-	e := Event{
-		Type:      EventStart,
-		Op:        op,
-		Message:   msg,
-		Timestamp: time.Now(),
-	}
-
-	b.emitter.Emit(e)
+	b.emit(Event{
+		Type:    EventStart,
+		Op:      op,
+		Message: msg,
+	})
 }
 
 // EmitComplete operation end helper
 func (b *EmitterBase) EmitComplete(op Operation, msg string) {
-	if b.emitter == nil {
-		return
-	}
-
-	e := Event{
-		Type:      EventComplete,
-		Op:        op,
-		Message:   msg,
-		Timestamp: time.Now(),
-	}
-
-	b.emitter.Emit(e)
+	b.emit(Event{
+		Type:    EventComplete,
+		Op:      op,
+		Message: msg,
+	})
 }
 
-// EmitEnd operation end helper
-func (b *EmitterBase) EmitEnd(op Operation) {
-	if b.emitter == nil {
-		return
-	}
-
-	e := Event{
-		Type:      EventEnd,
-		Op:        op,
-		Timestamp: time.Now(),
-	}
-
-	b.emitter.Emit(e)
+// EmitInfo emits an info event
+func (b *EmitterBase) EmitInfo(op Operation, msg string) {
+	b.emit(Event{
+		Type:    EventInfo,
+		Op:      op,
+		Message: msg,
+	})
 }
 
-// EmitError error emitter helper
-func (b *EmitterBase) EmitError(op Operation, err error) {
+// ERROR EMITTERs
+
+// EmitWarn emits a warning, operation continues
+func (b *EmitterBase) EmitWarn(op Operation, err error, msg string) {
+	b.emitError(op, err, msg, WARN)
+}
+
+// EmitError emits an error, operation failed
+func (b *EmitterBase) EmitError(op Operation, err error, msg string) {
+	b.emitError(op, err, msg, WARN)
+}
+
+// EmitFatal emits a fatal error, program should exit
+func (b *EmitterBase) EmitFatal(op Operation, err error, msg string) {
+	b.emitError(op, err, msg, WARN)
+}
+
+// emitError emit an error
+func (b *EmitterBase) emitError(op Operation, err error, msg string, errLvl ErrorLvl) {
+	e := Event{
+		Type:     EventError,
+		Op:       op,
+		Message:  msg,
+		Error:    err,
+		ErrorLvl: errLvl,
+	}
+
 	if b.logger != nil {
-		b.logger.Log(b.Scope, op, err)
+		b.logger.Log(e)
 	}
 
-	if b.emitter == nil {
-		return
-	}
+	b.emit(e)
+}
 
-	e := Event{
-		Type:      EventError,
-		Op:        op,
-		Error:     err,
-		Timestamp: time.Now(),
-	}
+// PAYLOADS
 
-	b.emitter.Emit(e)
+// emitPayload base payload emitter emits a payload event
+func (b *EmitterBase) emitPayload(op Operation, payload *Payload) {
+	b.emit(Event{
+		Type:    EventPayload,
+		Op:      op,
+		Payload: payload,
+	})
+}
+
+// EmitProgress emits an progress payload event
+func (b *EmitterBase) EmitProgress(op Operation, progress Progress) {
+	b.emitPayload(
+		op,
+		&Payload{
+			Progress: &progress,
+		},
+	)
 }
 
 // EmitPackage emits a package
 func (b *EmitterBase) EmitPackage(op Operation, p packages.Package) {
-	if b.emitter == nil {
-		return
-	}
-
-	e := Event{
-		Type: EventPayload,
-		Op:   op,
-		Payload: &Payload{
+	b.emitPayload(
+		op,
+		&Payload{
 			Package: &PackageItem{
 				PackageBase: p.GetBase(),
 				Installed:   p.IsInstalled(),
 			},
-		},
-		Timestamp: time.Now(),
-	}
-
-	b.emitter.Emit(e)
+		})
 }
 
 // EmitPackages emit a batch of packages
 func (b *EmitterBase) EmitPackages(op Operation, ps []packages.Package) {
-	if b.emitter == nil {
-		return
-	}
-
 	pi := make([]PackageItem, 0, len(ps))
 	for _, p := range ps {
 		pi = append(pi, PackageItem{
@@ -139,27 +141,9 @@ func (b *EmitterBase) EmitPackages(op Operation, ps []packages.Package) {
 		})
 	}
 
-	e := Event{
-		Type: EventPayload,
-		Op:   op,
-		Payload: &Payload{
+	b.emitPayload(
+		op,
+		&Payload{
 			Packages: pi,
-		},
-		Timestamp: time.Now(),
-	}
-
-	b.emitter.Emit(e)
-}
-
-func (b *EmitterBase) EmitInfo(op Operation, msg string) {
-	if b.emitter == nil {
-		return
-	}
-
-	b.Emit(Event{
-		Type:      EventInfo,
-		Op:        op,
-		Message:   msg,
-		Timestamp: time.Now(),
-	})
+		})
 }

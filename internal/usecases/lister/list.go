@@ -31,7 +31,6 @@ func New(base usecases.Base, iRepo packages.InstalledRepo, rRepo packages.Remote
 func (l *Lister) SearchAll(ctx context.Context) error {
 	op := l.StartOp(events.Operation{}, "search_remote_all")
 	l.EmitStart(op, "searching for packages")
-	defer l.EmitEnd(op)
 
 	pkgs, err := l.remoteRepo.GetAll(events.WithOp(ctx, op))
 	if err != nil {
@@ -51,7 +50,6 @@ func (l *Lister) SearchAll(ctx context.Context) error {
 func (l *Lister) SearchPkg(ctx context.Context, pkgID packages.PkgID) error {
 	op := l.StartOp(events.Operation{}, fmt.Sprintf("search_remote_%s", pkgID))
 	l.EmitStart(op, fmt.Sprintf("searching for package: %s", pkgID))
-	defer l.EmitEnd(op)
 
 	pkg, err := l.remoteRepo.GetByID(events.WithOp(ctx, op), pkgID)
 	if err != nil {
@@ -67,7 +65,6 @@ func (l *Lister) SearchPkg(ctx context.Context, pkgID packages.PkgID) error {
 func (l *Lister) ListAll(ctx context.Context) error {
 	op := l.StartOp(events.Operation{}, "list_installed_all")
 	l.EmitStart(op, "listing pacakages")
-	defer l.EmitEnd(op)
 
 	pkgs, err := l.installedRepo.GetAll(events.WithOp(ctx, op))
 	if err != nil {
@@ -89,7 +86,6 @@ func (l *Lister) ListAll(ctx context.Context) error {
 func (l *Lister) ListPkg(ctx context.Context, pkgID packages.PkgID) error {
 	op := l.StartOp(events.Operation{}, fmt.Sprintf("list_installed_%s", pkgID))
 	l.EmitStart(op, fmt.Sprintf("listing pacakage %s", pkgID))
-	defer l.EmitEnd(op)
 
 	pkg, err := l.installedRepo.GetByID(events.WithOp(ctx, op), pkgID)
 	if err != nil {

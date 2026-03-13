@@ -12,6 +12,7 @@ type Operation struct {
 	Scope    Scope
 	Intent   string
 	ParentID string
+	Depth    int
 }
 
 // StartOp starts a new operation with the given intent, if parent operation is provided, it will be set as the parent of the new operation
@@ -28,16 +29,18 @@ func (e *EmitterBase) newOp(intent string) Operation {
 		ID:     newOpID(),
 		Scope:  e.Scope,
 		Intent: intent,
+		Depth:  0,
 	}
 }
 
 // newChildOp is a helper that creates a new chil operation with its parentID and a unique ID
-func (e *EmitterBase) newChildOp(intent string, parentOP Operation) Operation {
+func (e *EmitterBase) newChildOp(intent string, parentOp Operation) Operation {
 	return Operation{
 		ID:       newOpID(),
 		Scope:    e.Scope,
 		Intent:   intent,
-		ParentID: parentOP.ID,
+		ParentID: parentOp.ID,
+		Depth:    parentOp.Depth + 1,
 	}
 }
 

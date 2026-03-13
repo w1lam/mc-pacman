@@ -41,7 +41,6 @@ func (a *Activator) Enable(ctx context.Context, pkgID packages.PkgID) error {
 	pOp, _ := events.OpFromCtx(ctx)
 	op := a.StartOp(pOp, fmt.Sprintf("enable_package_%s", pkgID))
 	a.EmitStart(op, fmt.Sprintf("enabling %s", pkgID))
-	defer a.EmitEnd(op)
 
 	pkg, err := a.iRepo.GetByID(ctx, pkgID)
 	if err != nil {
@@ -75,7 +74,6 @@ func (a *Activator) Disable(ctx context.Context, pkgType packages.PkgTypeID) err
 	pOp, _ := events.OpFromCtx(ctx)
 	op := a.StartOp(pOp, fmt.Sprintf("disable_package_type_%s", pkgType))
 	a.EmitStart(op, fmt.Sprintf("disabling %s", pkgType))
-	defer a.EmitEnd(op)
 
 	st, err := a.sRepo.Load()
 	if err != nil {
